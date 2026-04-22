@@ -41,13 +41,17 @@ const Navbar = () => {
   };
 
   console.log("Type de setSearchQuery:", typeof setSearchQuery);
-console.log("Valeur de searchQuery:", searchQuery);
+  console.log("Valeur de searchQuery:", searchQuery);
   return (
     <nav className="flex items-center justify-between px-4 md:px-10 lg:px-16 py-4 h-[55px] border-b border-gray-200 bg-gray sticky top-0 z-50 bg-gray-300">
       {/* --- LOGO --- */}
       <NavLink to="/" className="z-50">
-        <img src="/logo.jpeg" alt="logo" className="w-28 md:w-32" style={{height: '50px', width: '50px'}} />
-        
+        <img
+          src="/logo.jpeg"
+          alt="logo"
+          className="w-28 md:w-32"
+          style={{ height: "50px", width: "50px" }}
+        />
       </NavLink>
 
       {/* --- DESKTOP NAVIGATION (Visible > sm) --- */}
@@ -195,11 +199,18 @@ console.log("Valeur de searchQuery:", searchQuery);
               onClick={() => setOpen(false)}
               className="flex items-center gap-3 cursor-pointer"
             >
-              
-            <img src="/logo.jpeg" alt="logo" className="w-28 md:w-32 cursor-pointer" style={{height: '50px', width: '50px'}} />
+              <img
+                src="/logo.jpeg"
+                alt="logo"
+                className="w-28 md:w-32 cursor-pointer"
+                style={{ height: "50px", width: "50px" }}
+              />
             </NavLink>
-            
-            <button onClick={() => setOpen(false)} className="text-2xl cursor-pointer hover:text-red-500 transition">
+
+            <button
+              onClick={() => setOpen(false)}
+              className="text-2xl cursor-pointer hover:text-red-500 transition"
+            >
               <i className="bi bi-x-lg"></i>
             </button>
           </div>
@@ -225,13 +236,17 @@ console.log("Valeur de searchQuery:", searchQuery);
             <div className="flex flex-col gap-2">
               <p className="text-sm text-gray-400 uppercase">Catégories</p>
               <select
-                onChange={(e) =>
-                  navigate(
-                    e.target.value
-                      ? `/products/${e.target.value.toLowerCase()}`
-                      : "/products",
-                  )
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  if (value) {
+                    navigate(`/products/${value.toLowerCase()}`);
+                  } else {
+                    navigate("/products");
+                  }
+
+                  setOpen(false);
+                }}
                 className="p-3 bg-gray-50 rounded-xl outline-none border border-gray-100"
               >
                 <option value="">Toutes les catégories</option>
@@ -276,7 +291,8 @@ console.log("Valeur de searchQuery:", searchQuery);
                   onClick={logout}
                   className="text-left text-red-500 flex items-center gap-3 font-normal"
                 >
-                  <i className="bi bi-box-arrow-right cursor-pointer"></i> Déconnexion
+                  <i className="bi bi-box-arrow-right cursor-pointer"></i>{" "}
+                  Déconnexion
                 </button>
               </>
             )}
