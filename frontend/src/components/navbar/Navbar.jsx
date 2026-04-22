@@ -69,21 +69,26 @@ const Navbar = () => {
         {/* Select Catégories Desktop */}
         <div className="relative group flex items-center">
           <select
-            onChange={(e) =>
-              navigate(
-                e.target.value
-                  ? `/products/${e.target.value.toLowerCase()}`
-                  : "/products",
-              )
-            }
+            onChange={(e) => {
+              const selectedPath = e.target.value;
+              if (selectedPath) {
+                // Redirection vers le parent
+                navigate(`/products/${selectedPath}`);
+              } else {
+                navigate("/products");
+              }
+            }}
             className="bg-transparent outline-none cursor-pointer hover:text-indigo-600 appearance-none pr-5 py-1"
           >
             <option value="">Catégories</option>
-            {categories?.map((cat, index) => (
-              <option key={index} value={cat.name || cat.text}>
-                {cat.name || cat.text}
-              </option>
-            ))}
+            {/* ✅ CHANGE: Filter to show ONLY parents (parentId === null) */}
+            {categories
+              ?.filter((cat) => cat.parentId === null)
+              .map((cat, index) => (
+                <option key={index} value={cat.path}>
+                  {cat.text}
+                </option>
+              ))}
           </select>
           <i className="bi bi-chevron-down absolute right-0 text-[10px] text-gray-400 group-hover:text-indigo-600 pointer-events-none"></i>
         </div>
@@ -238,23 +243,24 @@ const Navbar = () => {
               <select
                 onChange={(e) => {
                   const value = e.target.value;
-
                   if (value) {
-                    navigate(`/products/${value.toLowerCase()}`);
+                    navigate(`/products/${value}`);
                   } else {
                     navigate("/products");
                   }
-
                   setOpen(false);
                 }}
                 className="p-3 bg-gray-50 rounded-xl outline-none border border-gray-100"
               >
                 <option value="">Toutes les catégories</option>
-                {categories?.map((cat, index) => (
-                  <option key={index} value={cat.name || cat.text}>
-                    {cat.name || cat.text}
-                  </option>
-                ))}
+                {/* ✅ CHANGE: Filter to show ONLY parents (parentId === null) */}
+                {categories
+                  ?.filter((cat) => cat.parentId === null)
+                  .map((cat, index) => (
+                    <option key={index} value={cat.path}>
+                      {cat.text}
+                    </option>
+                  ))}
               </select>
             </div>
 

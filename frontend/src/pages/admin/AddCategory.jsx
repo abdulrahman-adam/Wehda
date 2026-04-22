@@ -191,7 +191,7 @@ const AddCategory = () => {
           {/* BUTTON */}
           <button
             disabled={loading}
-            className="w-full bg-indigo-600 text-white p-4 rounded-xl font-bold"
+            className="w-full bg-indigo-600 text-white p-4 rounded-xl font-bold cursor-pointer"
           >
             {loading ? "CREATING..." : "ADD CATEGORY"}
           </button>

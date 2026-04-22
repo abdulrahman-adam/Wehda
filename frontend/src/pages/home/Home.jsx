@@ -1,14 +1,15 @@
 import React from 'react'
+import CategoryDrillDown from '../../components/categoryDrillDown/CategoryDrillDown'
+import LatestFeatured from '../../components/latestFeatured/LatestFeatured'
 import Slider from '../../components/slider/Slider'
-import ProductCard from '../../components/productCard/ProductCard'
-import TreeProductList from '../../components/treeProductList/TreeProductList'
+
 
 const Home = () => {
   return (
     <div>
+      <CategoryDrillDown />
       <Slider />
-      {/* <ProductCard /> */}
-      <TreeProductList />
+      <LatestFeatured />
     </div>
   )
 }

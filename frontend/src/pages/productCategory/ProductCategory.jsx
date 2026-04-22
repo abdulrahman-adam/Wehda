@@ -168,6 +168,7 @@
 
 // export default ProductCategory;
 
+
 import React, { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
@@ -178,59 +179,52 @@ const ProductCategory = () => {
   const { parent, child } = useParams();
 
   const filteredProducts = useMemo(() => {
-    if (!products || !categories) return [];
+    if (!products.length || !categories.length) return [];
 
-    const parentSlug = (parent || "").toLowerCase().trim();
-    const childSlug = (child || "").toLowerCase().trim();
+    const parentSlug = parent?.toLowerCase().trim();
+    const childSlug = child?.toLowerCase().trim();
 
+    // 1. Find the current category object based on the URL
+    // If 'child' exists, we look for the child category. Otherwise, the parent.
+    const activeCategory = categories.find(cat => 
+      (cat.path || "").toLowerCase().trim() === (childSlug || parentSlug)
+    );
+
+    if (!activeCategory) return [];
+
+    // 2. Get IDs of the category and all its immediate children
+    // This ensures if you click "Fruits", you see "Bananes" and "Tomates" too.
+    const targetCategoryIds = [
+      activeCategory.id,
+      ...categories
+        .filter(cat => cat.parentId === activeCategory.id)
+        .map(cat => cat.id)
+    ];
+
+    // 3. Filter products
     return products.filter((product) => {
-      const productCat = (
-        product.category?.path ||
-        product.category ||
-        ""
-      )
-        .toString()
-        .toLowerCase()
-        .trim();
-
-      // ✅ CHILD PAGE → /products/fruits/apple
-      if (childSlug) {
-        return productCat === childSlug;
-      }
-
-      // ✅ PARENT PAGE → /products/fruits
-      const parentCategory = categories.find(
-        (cat) =>
-          (cat.path || "").toLowerCase().trim() === parentSlug
-      );
-
-      if (!parentCategory) return false;
-
-      const children = categories
-        .filter((cat) => cat.parentId === parentCategory.id)
-        .map((cat) => cat.path.toLowerCase());
-
-      return children.includes(productCat);
+      // Check if product.categoryId matches the active category or any of its children
+      const pCatId = product.categoryId || product.category?.id || product.category;
+      return targetCategoryIds.includes(Number(pCatId));
     });
   }, [products, parent, child, categories]);
 
   return (
     <div className="mt-16 px-4 min-h-[60vh]">
-
-      <h2 className="text-3xl text-center mb-6 uppercase">
-        {child ? `${parent} / ${child}` : parent}
+      <h2 className="text-2xl font-bold text-center mb-8 uppercase tracking-widest">
+        {child ? `${parent} > ${child}` : parent}
       </h2>
 
       {filteredProducts.length > 0 ? (
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">
-          No products found
-        </p>
+        <div className="text-center py-20">
+          <p className="text-gray-400 text-lg">No products found in this category.</p>
+        </div>
       )}
     </div>
   );
