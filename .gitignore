@@ -40,3 +40,5 @@ docker-compose.yml
 # 📁 Temporary files
 tmp/
 temp/
+./frontend/.env
+./backend/.env
