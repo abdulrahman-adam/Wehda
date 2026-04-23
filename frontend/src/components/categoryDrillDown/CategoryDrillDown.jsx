@@ -21,90 +21,105 @@ const CategoryDrillDown = ({ onClose }) => {
   };
 
   return (
-    <div className="w-full bg-white overflow-hidden relative min-h-[400px]">
-      {/* --- LEVEL 1: PARENT CATEGORIES --- */}
-      <div
-        className={`w-full transition-all duration-500 ease-in-out transform ${
-          currentLevel === "parents" 
-          ? "translate-x-0 opacity-100" 
-          : "-translate-x-full opacity-0 absolute"
-        }`}
-      >
-        <h3 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4">
-          Toutes les Catégories
-        </h3>
-        <div className="space-y-2">
-          {parents.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => handleParentClick(cat)}
-              className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-2xl group hover:bg-indigo-50 transition-all"
-            >
-              <span className="font-bold text-gray-800 group-hover:text-indigo-600">
-                {cat.text}
-              </span>
-              <i className="bi bi-chevron-right text-gray-400 group-hover:translate-x-1 transition-transform"></i>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* --- LEVEL 2: CHILDREN / SUB-CATEGORIES --- */}
-      <div
-        className={`w-full transition-all duration-500 ease-in-out transform ${
-          currentLevel === "children" 
-          ? "translate-x-0 opacity-100" 
-          : "translate-x-full opacity-0 absolute top-0"
-        }`}
-      >
+ <div className="w-full bg-white overflow-hidden relative">
+  
+  {/* --- LEVEL 1: PARENT CATEGORIES (SLIDES LEFT ON EXIT) --- */}
+  <div
+    className={`w-full transition-all duration-500 ease-in-out transform ${
+      currentLevel === "parents" 
+      ? "translate-x-0 opacity-100" 
+      : "-translate-x-full opacity-0 absolute pointer-events-none"
+    }`}
+  >
+    <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6 text-center mt-8">
+      Explorer les Collections
+    </h3>
+    
+    {/* Horizontal Scroll Row */}
+    <div className="flex overflow-x-auto pb-8 px-6 gap-6 scrollbar-hide snap-x mx-auto justify-start sm:justify-center">
+      {parents.map((cat) => (
         <button
-          onClick={goBack}
-          className="flex items-center gap-2 text-indigo-600 font-black text-xs uppercase tracking-widest mb-6 hover:gap-3 transition-all"
+          key={cat.id}
+          onClick={() => handleParentClick(cat)}
+          className="flex flex-col items-center group space-y-3 outline-none flex-shrink-0 snap-center"
         >
-          <i className="bi bi-arrow-left"></i> Retour
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-50 flex items-center justify-center border-2 border-indigo-50 group-hover:border-indigo-600 transition-all duration-300 overflow-hidden shadow-sm">
+             <img 
+              src={cat.image || "/logo.jpeg"} 
+              alt={cat.text}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <span className="font-bold text-[11px] uppercase tracking-tight text-gray-700 group-hover:text-indigo-600 transition-colors text-center w-20 line-clamp-1">
+            {cat.text}
+          </span>
         </button>
-
-        <div className="mb-6">
-          <h2 className="text-2xl font-black text-gray-900 leading-tight">
-            {selectedParent?.text}
-          </h2>
-          <button
-            onClick={() => {
-              navigate(`/products/${selectedParent?.path}`);
-              if (onClose) onClose();
-            }}
-            className="text-xs font-medium text-gray-400 underline decoration-indigo-200 hover:text-indigo-600"
-          >
-            Voir tout dans {selectedParent?.text}
-          </button>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3">
-          {children.map((child) => (
-            <div
-              key={child.id}
-              onClick={() => {
-                navigate(`/products/${selectedParent.path}/${child.path}`);
-                if (onClose) onClose();
-              }}
-              className="flex items-center gap-4 p-3 border border-gray-100 rounded-2xl cursor-pointer hover:border-indigo-200 hover:shadow-md transition-all active:scale-95 bg-white"
-            >
-              <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden border border-gray-100">
-                <img
-                  src={child.image || "/logo.jpeg"}
-                  alt={child.text}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <p className="font-bold text-gray-800">{child.text}</p>
-                <p className="text-[10px] text-gray-400 uppercase font-medium">Découvrir</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      ))}
     </div>
+    <div className="h-[1px] bg-gray-100 w-full mb-4"></div>
+  </div>
+
+  {/* --- LEVEL 2: SUB-CATEGORIES (SLIDES IN FROM RIGHT) --- */}
+  <div
+    className={`w-full px-6 transition-all duration-500 ease-in-out transform ${
+      currentLevel === "children" 
+      ? "translate-x-0 opacity-100" 
+      : "translate-x-full opacity-0 absolute top-0 pointer-events-none"
+    }`}
+  >
+    <div className="flex items-center justify-between mt-6 mb-8">
+      <button
+        onClick={goBack}
+        className="flex items-center gap-1 text-gray-400 font-black text-[10px] uppercase tracking-widest hover:text-indigo-600 transition-all"
+      >
+        <i className="bi bi-chevron-left text-sm"></i> Retour
+      </button>
+
+      <h2 className="text-lg font-black text-gray-900 italic tracking-tighter uppercase">
+        {selectedParent?.text}
+      </h2>
+    </div>
+
+    {/* Single Column List */}
+    <div className="flex flex-col gap-3 pb-12">
+      {children.map((child) => (
+        <div
+          key={child.id}
+          onClick={() => {
+            navigate(`/products/${selectedParent.path}/${child.path}`);
+            if (onClose) onClose();
+          }}
+          className="flex items-center gap-4 p-3 bg-gray-50 rounded-[20px] cursor-pointer hover:bg-indigo-50 border border-transparent hover:border-indigo-100 transition-all active:scale-[0.98]"
+        >
+          <div className="w-14 h-14 rounded-full bg-white border border-gray-100 shadow-sm overflow-hidden flex-shrink-0">
+            <img
+              src={child.image || "/logo.jpeg"}
+              alt={child.text}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          
+          <div className="flex-1">
+            <p className="font-black text-gray-800 text-sm">{child.text}</p>
+            <p className="text-[9px] text-gray-400 uppercase font-bold tracking-widest">Voir la collection</p>
+          </div>
+          
+          <i className="bi bi-chevron-right text-gray-300 pr-2"></i>
+        </div>
+      ))}
+      
+      <button
+        onClick={() => {
+            navigate(`/products/${selectedParent?.path}`);
+            if (onClose) onClose();
+        }}
+        className="mt-4 w-full py-4 border-2 border-dashed border-gray-100 rounded-[20px] text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] hover:bg-gray-50 hover:text-indigo-600 transition-all"
+      >
+        Tout afficher dans {selectedParent?.text}
+      </button>
+    </div>
+  </div>
+</div>
   );
 };
 
