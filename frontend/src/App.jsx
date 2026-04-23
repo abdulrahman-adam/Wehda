@@ -127,6 +127,10 @@ import AddProduct from "./pages/admin/AddProduct";
 import ListCategory from "./pages/admin/ListCategory";
 import ProductList from "./pages/admin/ProductList";
 import ContactList from "./pages/admin/ContactList";
+import Cart from "./pages/cart/Cart";
+import AddAddress from "./pages/addAddress/AddAdress";
+import MyOrders from "./pages/myOrders/MyOrders";
+import Orders from "./pages/admin/Orders";
 
 const App = () => {
   const { pathname } = useLocation();
@@ -150,6 +154,9 @@ const App = () => {
         {/* PUBLIC */}
         <Route path="/" element={<Home />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/add-address" element={<AddAddress />} />
+        <Route path='/my-orders' element={<MyOrders />} />
         
         {/* PRODUCT SYSTEM */}
         <Route path="/products" element={<AllProducts />} />
@@ -168,6 +175,7 @@ const App = () => {
           <Route path="category-list" element={<ListCategory />} />
           <Route path="add-category" element={<AddCategory />} />
           <Route path="all-contact" element={<ContactList />} />
+          <Route path='orders' element={<Orders />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />

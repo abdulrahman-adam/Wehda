@@ -326,6 +326,7 @@
 
 // export const useAppContext = () => useContext(AppContext);
 
+
 import { useContext, useEffect, useState, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -342,7 +343,7 @@ export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
   // --- State ---
-  const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState([]); // Shared Order State
   const [user, setUser] = useState(null);
   const [isSeller, setIsSeller] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -353,7 +354,6 @@ export const AppContextProvider = ({ children }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [contacts, setContacts] = useState([]);
 
-  
   // --- AUTH ---
   const fetchSeller = async () => {
     try {
@@ -372,12 +372,13 @@ export const AppContextProvider = ({ children }) => {
 
         let rawCart = data.user.cartItems;
 
+        // Enhanced Recursive Parsing for Sequelize JSON strings
         if (typeof rawCart === "string") {
           try {
             while (typeof rawCart === "string") {
               rawCart = JSON.parse(rawCart);
             }
-            setCartItems(rawCart);
+            setCartItems(rawCart || {});
           } catch {
             setCartItems({});
           }
@@ -390,6 +391,18 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
+  // --- ORDERS (New Central Fetch) ---
+  const fetchOrders = async () => {
+    try {
+      const { data } = await axios.get("/api/order/seller");
+      if (data.success) {
+        setOrders(data.orders);
+      }
+    } catch (error) {
+      console.error("Fetch orders error:", error.message);
+    }
+  };
+
   // --- PRODUCTS ---
   const fetchProducts = async () => {
     try {
@@ -398,25 +411,21 @@ export const AppContextProvider = ({ children }) => {
       if (data?.success && Array.isArray(data?.products)) {
         const formattedProducts = data.products.map((product) => ({
           ...product,
-
           image: Array.isArray(product.image)
             ? product.image
             : product.image
-              ? JSON.parse(product.image)
-              : [],
-
+            ? JSON.parse(product.image)
+            : [],
           variants: Array.isArray(product.variants)
             ? product.variants
             : product.variants
-              ? JSON.parse(product.variants)
-              : [],
-
+            ? JSON.parse(product.variants)
+            : [],
           colors: Array.isArray(product.colors)
             ? product.colors
             : product.colors
-              ? JSON.parse(product.colors)
-              : [],
-
+            ? JSON.parse(product.colors)
+            : [],
           categoryData: product.categoryData || null,
         }));
 
@@ -430,13 +439,11 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
-  // --- ⭐ FIXED CATEGORY FETCH (TREE SYNC ADDED) ---
+  // --- CATEGORIES ---
   const fetchCategories = async () => {
     try {
       const { data } = await axios.get("/api/category/list");
-
       if (data.success) {
-        // categories are already FLAT from backend
         setCategories(data.categories || []);
       }
     } catch (error) {
@@ -446,13 +453,10 @@ export const AppContextProvider = ({ children }) => {
   };
 
   const getChildCategories = (parentId) => {
-  return categories.filter(
-    (cat) => String(cat.parentId) === String(parentId)
-  );
-};
-
-
-
+    return categories.filter(
+      (cat) => String(cat.parentId) === String(parentId)
+    );
+  };
 
   const getAllContacts = async () => {
     if (!isSeller) return;
@@ -470,7 +474,6 @@ export const AppContextProvider = ({ children }) => {
       const { data } = await axios.delete("/api/product/delete", {
         data: { id: productId },
       });
-
       if (data.success) {
         toast.success("Product deleted!");
         setProducts((prev) => prev.filter((p) => p.id !== productId));
@@ -485,7 +488,6 @@ export const AppContextProvider = ({ children }) => {
       const { data } = await axios.post("/api/category/delete", {
         id: categoryId,
       });
-
       if (data.success) {
         toast.success("Deleted successfully!");
         setCategories((prev) => prev.filter((cat) => cat.id !== categoryId));
@@ -522,27 +524,22 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
-  // --- CART ---
+  // --- CART LOGIC ---
   const addToCart = (itemId, variant = "") => {
     if (!itemId) return;
-
     const cartKey = variant ? `${itemId}-${variant}` : `${itemId}`;
-
     let cartData = structuredClone(cartItems || {});
     cartData[cartKey] = (cartData[cartKey] || 0) + 1;
-
     setCartItems(cartData);
     toast.success("Added to cart ✨");
   };
 
   const removeFromCart = (itemId) => {
     let cartData = structuredClone(cartItems);
-
     if (cartData[itemId]) {
       cartData[itemId] -= 1;
       if (cartData[itemId] <= 0) delete cartData[itemId];
     }
-
     setCartItems(cartData);
     toast.success("Removed from cart");
   };
@@ -559,18 +556,15 @@ export const AppContextProvider = ({ children }) => {
 
   const getCartAmount = () => {
     let total = 0;
-
     for (const key in cartItems) {
       if (cartItems[key] > 0) {
         const productId = String(key).split("-")[0];
         const item = products.find((p) => String(p.id) === productId);
-
         if (item) {
           total += item.offerPrice * cartItems[key];
         }
       }
     }
-
     return parseFloat(total.toFixed(2));
   };
 
@@ -586,16 +580,19 @@ export const AppContextProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (isSeller) getAllContacts();
+    if (isSeller) {
+      getAllContacts();
+      fetchOrders(); // Load orders if seller
+    }
   }, [isSeller]);
 
+  // Debounced Cart Sync
   useEffect(() => {
     const syncCart = async () => {
       if (user && Object.keys(cartItems).length > 0) {
         await axios.post("/api/cart/update", { cartItems });
       }
     };
-
     const delay = setTimeout(syncCart, 500);
     return () => clearTimeout(delay);
   }, [cartItems, user]);
@@ -631,6 +628,7 @@ export const AppContextProvider = ({ children }) => {
     deleteContact,
     orders,
     setOrders,
+    fetchOrders, // Added to export
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

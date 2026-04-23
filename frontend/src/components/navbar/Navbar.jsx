@@ -40,8 +40,8 @@ const Navbar = () => {
     }
   };
 
-  console.log("Type de setSearchQuery:", typeof setSearchQuery);
-  console.log("Valeur de searchQuery:", searchQuery);
+  // console.log("Type de setSearchQuery:", typeof setSearchQuery);
+  // console.log("Valeur de searchQuery:", searchQuery);
   return (
     <nav className="flex items-center justify-between px-4 md:px-10 lg:px-16 py-4 h-[55px] border-b border-gray-200 bg-gray sticky top-0 z-50 bg-gray-300">
       {/* --- LOGO --- */}
