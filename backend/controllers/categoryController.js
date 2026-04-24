@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 
 import Category from "../models/Category.js";
+import Products from "../models/Products.js";
 
 // export const addCategory = async (req, res) => {
 //   try {
@@ -204,58 +205,104 @@ export const categoryList = async (req, res) => {
     }
 };
 
+// export const deleteCategory = async (req, res) => {
+//   try {
+//     const { id } = req.body;
+
+//     // 1. Find the category including its subcategories
+//     const category = await Category.findByPk(id, {
+//       include: { model: Category, as: 'subcategories' }
+//     });
+
+//     if (!category) {
+//       return res.status(404).json({ 
+//         success: false, 
+//         message: `Category ID ${id} not found` 
+//       });
+//     }
+
+//     // 2. Handle Cloudinary cleanup for the category and its children
+//     // We create an array of all public IDs to delete from Cloudinary
+//     const publicIdsToDelete = [];
+    
+//     if (category.imagePublicId) publicIdsToDelete.push(category.imagePublicId);
+    
+//     // Add subcategory images to the delete list
+//     if (category.subcategories && category.subcategories.length > 0) {
+//       category.subcategories.forEach(sub => {
+//         if (sub.imagePublicId) publicIdsToDelete.push(sub.imagePublicId);
+//       });
+//     }
+
+//     // Execute Cloudinary deletions
+//     if (publicIdsToDelete.length > 0) {
+//       await Promise.all(
+//         publicIdsToDelete.map(publicId => cloudinary.uploader.destroy(publicId))
+//       );
+//     }
+
+//     // 3. Delete from Database
+//     // Because we set up the association with onDelete: 'CASCADE' in the model,
+//     // destroying the parent will automatically destroy children in MySQL.
+//     await category.destroy();
+
+//     return res.json({ 
+//       success: true, 
+//       message: "Category and its subcategories deleted successfully" 
+//     });
+
+//   } catch (error) {
+//     console.error("Delete Error:", error.message);
+//     return res.status(500).json({ 
+//       success: false, 
+//       message: "Internal Server Error", 
+//       error: error.message 
+//     });
+//   }
+// };
+
+
+
+
 export const deleteCategory = async (req, res) => {
   try {
     const { id } = req.body;
 
-    // 1. Find the category including its subcategories
+    // 2. Fetch category and subcategories
     const category = await Category.findByPk(id, {
       include: { model: Category, as: 'subcategories' }
     });
 
     if (!category) {
-      return res.status(404).json({ 
-        success: false, 
-        message: `Category ID ${id} not found` 
-      });
+      return res.status(404).json({ success: false, message: "Category not found" });
     }
 
-    // 2. Handle Cloudinary cleanup for the category and its children
-    // We create an array of all public IDs to delete from Cloudinary
-    const publicIdsToDelete = [];
-    
-    if (category.imagePublicId) publicIdsToDelete.push(category.imagePublicId);
-    
-    // Add subcategory images to the delete list
-    if (category.subcategories && category.subcategories.length > 0) {
-      category.subcategories.forEach(sub => {
-        if (sub.imagePublicId) publicIdsToDelete.push(sub.imagePublicId);
-      });
+    // 3. Collect all Category IDs involved
+    const allCategoryIds = [category.id];
+    if (category.subcategories) {
+      category.subcategories.forEach(sub => allCategoryIds.push(sub.id));
     }
 
-    // Execute Cloudinary deletions
-    if (publicIdsToDelete.length > 0) {
-      await Promise.all(
-        publicIdsToDelete.map(publicId => cloudinary.uploader.destroy(publicId))
-      );
+    // 4. MANUAL CASCADE: Delete products first to break the Foreign Key lock
+    // This solves the 'ER_ROW_IS_REFERENCED_2' error
+    await Products.destroy({ where: { categoryId: allCategoryIds } });
+
+    // 5. Cloudinary Cleanup
+    const images = [category.imagePublicId];
+    category.subcategories?.forEach(sub => images.push(sub.imagePublicId));
+    const cleanImages = images.filter(Boolean);
+    if (cleanImages.length > 0) {
+      await Promise.all(cleanImages.map(pid => cloudinary.uploader.destroy(pid)));
     }
 
-    // 3. Delete from Database
-    // Because we set up the association with onDelete: 'CASCADE' in the model,
-    // destroying the parent will automatically destroy children in MySQL.
+    // 6. Delete Categories (Children then Parent)
+    await Category.destroy({ where: { parentId: id } });
     await category.destroy();
 
-    return res.json({ 
-      success: true, 
-      message: "Category and its subcategories deleted successfully" 
-    });
+    return res.json({ success: true, message: "Category and linked products deleted successfully" });
 
   } catch (error) {
-    console.error("Delete Error:", error.message);
-    return res.status(500).json({ 
-      success: false, 
-      message: "Internal Server Error", 
-      error: error.message 
-    });
+    console.error("Delete Error:", error);
+    return res.status(500).json({ success: false, message: error.message });
   }
 };

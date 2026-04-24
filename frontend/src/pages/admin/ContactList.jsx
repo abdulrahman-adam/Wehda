@@ -3,6 +3,7 @@ import { AppContext } from "../../context/AppContext";
 
 const ContactList = () => {
   const { contacts, getAllContacts, deleteContact } = useContext(AppContext);
+  console.log("all contacts", getAllContacts)
 
   // Fetch contacts when the component mounts
   useEffect(() => {
