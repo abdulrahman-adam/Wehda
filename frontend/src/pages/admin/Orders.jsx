@@ -11,7 +11,7 @@ const Orders = () => {
     console.log("--- Fetching Orders Started ---");
     try {
       const { data } = await axios.get("/api/order/seller");
-      console.log("API Response Data:", data); // Check if data.success is true and data.orders exists
+      console.log("API Response Data:", data);
 
       if (data.success) {
         console.log("Setting Orders State with:", data.orders);
@@ -51,24 +51,18 @@ const Orders = () => {
 
   const handleDelete = async (orderId) => {
     console.log(`--- Attempting to Delete Order: ${orderId} ---`);
-    // 1. Call the backend
     const success = await deleteOrder(orderId);
     console.log("Delete Success result from Context:", success);
 
-    // 2. If the backend says OK, remove it from the screen immediately
     if (success) {
       setOrders((prev) => {
         const filtered = prev.filter((order) => order.id !== orderId);
-        console.log(
-          "Local Orders State updated. Remaining orders:",
-          filtered.length,
-        );
+        console.log("Local Orders State updated. Remaining orders:", filtered.length);
         return filtered;
       });
     }
   };
 
-  // Log every render to track state changes
   console.log("Current Render - Orders count:", orders.length);
 
   return (
@@ -80,9 +74,7 @@ const Orders = () => {
 
         <div className="space-y-6">
           {orders.map((order, index) => {
-            // Log individual order details to debug rendering issues
-            if (index === 0)
-              console.log("Example Order structure (First Item):", order);
+            if (index === 0) console.log("Example Order structure (First Item):", order);
 
             return (
               <div
@@ -108,13 +100,32 @@ const Orders = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">
-                      Order ID
-                    </p>
-                    <p className="text-sm font-mono text-gray-700">
-                      #{order.id}
-                    </p>
+
+                  {/* PAYMENT VERIFICATION BADGE */}
+                  <div className="flex items-center gap-4">
+                    <div className="text-right">
+                      <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">
+                        Payment Status
+                      </p>
+                      {order.payment ? (
+                        <span className="bg-green-100 text-green-700 text-[10px] px-3 py-1 rounded-full font-black uppercase border border-green-200">
+                          Verified Paid
+                        </span>
+                      ) : (
+                        <span className="bg-amber-100 text-amber-700 text-[10px] px-3 py-1 rounded-full font-black uppercase border border-amber-200">
+                          Pending Payment
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="text-right border-l pl-4 border-gray-200">
+                      <p className="text-xs text-gray-500 uppercase font-bold tracking-wider">
+                        Order ID
+                      </p>
+                      <p className="text-sm font-mono text-gray-700">
+                        #{order.id}
+                      </p>
+                    </div>
                   </div>
                 </div>
 
@@ -148,9 +159,7 @@ const Orders = () => {
                           </p>
                           <p className="text-sm font-medium mt-1 text-gray-700">
                             Subtotal:{" "}
-                            {(item.product?.offerPrice * item.quantity).toFixed(
-                              2,
-                            )}{" "}
+                            {(item.product?.offerPrice * item.quantity).toFixed(2)}{" "}
                             {currency}
                           </p>
                         </div>
@@ -174,12 +183,10 @@ const Orders = () => {
                             </p>
                             Address: <p>{order.address.street}</p>
 
-
                             <p>
                               {order.address.city} {order.address.zipcode}{" "}
                               {order.address.country}
                             </p>
-                            
 
                             <p className="text-blue-600 font-medium">
                               Telephone:{" "}
@@ -199,22 +206,29 @@ const Orders = () => {
                       </div>
                       <div>
                         <p className="text-xs font-bold text-gray-400 uppercase mb-1">
-                          Details
+                          Order Details
                         </p>
                         <p className="text-gray-700">
-                          Type: <b>{order.paymentType}</b>
+                          Method: <b>{order.paymentMethod || order.paymentType}</b>
                         </p>
                         <p className="text-gray-700">
                           Date:{" "}
                           <b>
-                            {new Date(order.createdAt).toLocaleDateString(
-                              "en-GB",
-                              {
-                                day: "2-digit",
-                                month: "short",
-                                year: "numeric",
-                              },
-                            )}
+                            {new Date(order.createdAt).toLocaleDateString("en-GB", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                            })}
+                          </b>
+                        </p>
+                        {/* ORDER TIME ADDED HERE */}
+                        <p className="text-gray-700">
+                          Time:{" "}
+                          <b>
+                            {new Date(order.createdAt).toLocaleTimeString("en-GB", {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                           </b>
                         </p>
                       </div>

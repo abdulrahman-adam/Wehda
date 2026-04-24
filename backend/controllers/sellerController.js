@@ -1,5 +1,6 @@
 
 import jwt from "jsonwebtoken";
+import User from "../models/User.js"; // Make sure to import your User model
 
 //the funcrtion Seller Login
 export const sellerLogin = async(req, res) => {
@@ -39,6 +40,55 @@ export const isSellerAuth = async(req, res) => {
         res.json({success: false, message: error.message});
     }
 }
+
+// export const getSellerProfile = async (req, res) => {
+//     try {
+//         // Return the credentials from your .env file
+//         return res.json({
+//             success: true,
+//             seller: {
+//                 name: "Administrateur", 
+//                 email: process.env.SELLER_EMAIL
+//             }
+//         });
+//     } catch (error) {
+//         res.json({ success: false, message: error.message });
+//     }
+// };
+
+
+
+
+
+export const getSellerProfile = async (req, res) => {
+    try {
+        const adminEmail = process.env.SELLER_EMAIL;
+
+        // Find the user in the database by email
+        const adminUser = await User.findOne({ 
+            where: { email: adminEmail },
+            attributes: ['name', 'email', 'role'] // Only get necessary fields
+        });
+
+        if (!adminUser) {
+            return res.json({ 
+                success: false, 
+                message: "Admin user not found in database" 
+            });
+        }
+
+        return res.json({
+            success: true,
+            seller: {
+                name: adminUser.name, // This will now be "Wehda Paris"
+                email: adminUser.email
+            }
+        });
+    } catch (error) {
+        console.error("Profile Fetch Error:", error.message);
+        res.json({ success: false, message: error.message });
+    }
+};
 
 // The function seller logout
 export const sellerLogout = async (req, res) => {

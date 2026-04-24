@@ -8,7 +8,8 @@ import Loading from "../../components/loading/Loading";
 import { assets } from "../../assets/assets";
 
 const AdminLayout = () => {
-  const { axios, navigate, setIsSeller, setUserData, setUser, user, isSeller } = useAppContext();
+  const { axios, navigate, setIsSeller, setUserData, setUser, user, isSeller,adminData } = useAppContext();
+  // const { adminData, isSeller, logout } = useAppContext();
 
   const sidebarLinks = [
     { name: "Add Product", path: "/admin", icon: assets.add_icon },
@@ -58,7 +59,8 @@ const AdminLayout = () => {
           <div className="text-right hidden sm:block">
             <p className="text-xs text-gray-400">Mode Administrateur</p>
             <p className="text-sm font-medium text-indigo-600">
-              Salut, {user ? user.name : "Admin"}
+              {/* Salut, {user ? user.name : "Admin"} */}
+              Salut, {adminData ? adminData.name : "Admin"}
             </p>
           </div>
           

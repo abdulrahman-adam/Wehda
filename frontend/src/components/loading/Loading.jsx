@@ -18,7 +18,7 @@ const Loading = () => {
   }, [nextUrl])
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+    <div className="flex flex-col items-center justify-center bg-red-50">
 
       {/* 🔵 Spinner */}
       <div className="relative">
