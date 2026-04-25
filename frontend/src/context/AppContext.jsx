@@ -460,17 +460,54 @@ const fetchUser = async () => {
 
 
   // --- ORDERS (Dynamic: Seller vs User) ---
+
+  // ORIGINAL
+  // const fetchOrders = async () => {
+  //   try {
+  //     // Switches endpoint based on who is logged in
+  //     const url = isSeller ? "/api/order/seller" : "/api/order/user";
+  //     const { data } = await axios.get(url);
+  //     if (data.success) setOrders(data.orders);
+  //   } catch (error) {
+  //     console.error("Fetch orders error:", error.message);
+  //     setOrders([]);
+  //   }
+  // };
+
   const fetchOrders = async () => {
     try {
-      // Switches endpoint based on who is logged in
       const url = isSeller ? "/api/order/seller" : "/api/order/user";
       const { data } = await axios.get(url);
-      if (data.success) setOrders(data.orders);
+      
+      if (data.success) {
+        setOrders([...data.orders]);
+        return data.orders; // <--- ADD THIS LINE
+      }
+      
+      return []; // Return empty array if success is false
     } catch (error) {
       console.error("Fetch orders error:", error.message);
       setOrders([]);
+      return []; // Return empty array on error
     }
-  };
+};
+
+
+// const fetchOrders = async () => {
+//   try {
+//     const url = isSeller ? "/api/order/seller" : "/api/order/user";
+//     const { data } = await axios.get(url);
+//     if (data.success) {
+//       setOrders(data.orders); 
+//       return data.orders; // CRITICAL: You must return the data here
+//     }
+//     return [];
+//   } catch (error) {
+//     console.error("Fetch orders error:", error.message);
+//     setOrders([]);
+//     return [];
+//   }
+// };
 
   // DELETE ORDER
     const deleteOrder = async (orderId) => {
@@ -533,19 +570,6 @@ const fetchUser = async () => {
     }
   };
 
-  // const deleteCategory = async (categoryId) => {
-  //   try {
-  //     const { data } = await axios.post("/api/category/delete", {
-  //       id: categoryId,
-  //     });
-  //     if (data.success) {
-  //       toast.success("Deleted successfully!");
-  //       setCategories((prev) => prev.filter((cat) => cat.id !== categoryId));
-  //     }
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   }
-  // };
 
 
   const deleteCategory = async (categoryId) => {
