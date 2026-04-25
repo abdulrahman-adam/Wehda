@@ -21,7 +21,7 @@ const CategoryDrillDown = ({ onClose }) => {
   };
 
   return (
-    <div className="w-full bg-white overflow-hidden relative min-h-[300px]">
+    <div className="w-full bg-white overflow-hidden relative min-h-[100px]">
       
       {/* --- LEVEL 1: PARENT CATEGORIES --- */}
       <div

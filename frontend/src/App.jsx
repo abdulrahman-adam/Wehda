@@ -33,7 +33,7 @@ import PaymentLoader from "./pages/paymentLoader/PaymentLoader";
 const App = () => {
   const { pathname } = useLocation();
   const isSellerPath = pathname.includes("admin");
-  const { showUserLogin, setShowUserLogin, isSeller,user } = useAppContext();
+  const { showUserLogin, setShowUserLogin, isSeller, user } = useAppContext();
 
   useEffect(() => {
     setShowUserLogin(false);
@@ -42,9 +42,8 @@ const App = () => {
   // 1. Wait for Auth check to complete
   // This prevents the <Navigate to="/" /> from running before the server answers
   if (user === undefined) {
-    return <Loading />; 
+    return <Loading />;
   }
-
 
   // 2. Existing Seller check
   if (isSellerPath && isSeller === null) return <Loading />;
@@ -76,14 +75,9 @@ const App = () => {
 
         {/* ================= PRODUCT SYSTEM ================= */}
         <Route path="/products" element={<AllProducts />} />
-        <Route path="/products/:parent" element={<TreeProductList />} />
-        <Route path="/products/:parent/:child" element={<TreeProductList />} />
 
-        {/* 🆕 ADDED: Support for 3rd level (e.g., Electronics/Laptops/Toshiba) */}
-        <Route
-          path="/products/:parent/:child/:grandchild"
-          element={<TreeProductList />}
-        />
+        {/* This single line now handles 1, 2, 3, 4, or even 10 levels of categories */}
+        <Route path="/products/*" element={<TreeProductList />} />
 
         {/* Unified Product Detail Route */}
         <Route path="/product/:id" element={<ProductDetails />} />
@@ -115,5 +109,7 @@ const App = () => {
 export default App;
 
 // Breadcrumb Navigation
-// Recursive
+// Recursive || Recursive Filter
 // getAllDescendantIds
+
+// splat (wildcard)

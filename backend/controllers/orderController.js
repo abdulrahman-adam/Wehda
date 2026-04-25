@@ -201,6 +201,15 @@ export const getUserOrders = async (req, res) => {
     }
 };
 
+export const deleteOrder = async (req, res) => {
+    try {
+        await Order.destroy({ where: { id: req.params.id } });
+        res.json({ success: true, message: "Order deleted" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 // --- 3. Place Order COD ---
 export const placeOrderCOD = async (req, res) => {
     try {
@@ -236,6 +245,25 @@ export const placeOrderCOD = async (req, res) => {
     }
 };
 
+export const updateStatus = async (req, res) => {
+    try {
+        const { orderId, status } = req.body;
+        const order = await Order.findByPk(orderId);
+
+        if (!order) {
+            return res.status(404).json({ success: false, message: "Order not found" });
+        }
+
+        order.status = status;
+        
+        // This line is critical: it updates the database AND the updatedAt timestamp
+        await order.save(); 
+
+        res.json({ success: true, message: "Status updated successfully" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
 // --- 4. Place Order Stripe ---
 export const placeOrderStripe = async (req, res) => {
     try {
@@ -284,61 +312,29 @@ export const placeOrderStripe = async (req, res) => {
     }
 };
 
-// --- 5. Admin Actions ---
-// export const updateStatus = async (req, res) => {
-//     try {
-//         const { orderId, status } = req.body;
-
-//         // 1. Find the specific order first
-//         const order = await Order.findByPk(orderId);
-
-//         if (!order) {
-//             return res.json({ success: false, message: "Order not found" });
-//         }
-
-//         // 2. Update the status field
-//         order.status = status;
-
-//         // 3. Save it (this triggers hooks correctly and updates updatedAt)
-//         await order.save();
-
-//         res.json({ success: true, message: "Status updated successfully" });
-//     } catch (error) {
-//         console.error("Backend Error:", error);
-//         res.json({ success: false, message: error.message });
-//     }
-// };
-
-export const updateStatus = async (req, res) => {
-    try {
-        const { orderId, status } = req.body;
-        const order = await Order.findByPk(orderId);
-
-        if (!order) {
-            return res.status(404).json({ success: false, message: "Order not found" });
-        }
-
-        order.status = status;
-        
-        // This line is critical: it updates the database AND the updatedAt timestamp
-        await order.save(); 
-
-        res.json({ success: true, message: "Status updated successfully" });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-};
-
-export const deleteOrder = async (req, res) => {
-    try {
-        await Order.destroy({ where: { id: req.params.id } });
-        res.json({ success: true, message: "Order deleted" });
-    } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
-    }
-};
 
 // --- 6. Stripe Webhook ---
+// export const stripeWebhooks = async (request, response) => {
+//     const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
+//     const sig = request.headers["stripe-signature"];
+//     let event;
+
+//     try {
+//         event = stripeInstance.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+//     } catch (error) {
+//         return response.status(400).send(`Webhook Error: ${error.message}`);
+//     }
+
+//     if (event.type === "checkout.session.completed") {
+//         const { orderId, userId } = event.data.object.metadata;
+//         await Order.update({ isPaid: true, status: "Order Placed" }, { where: { id: orderId } });
+//         await User.update({ cartItems: "{}" }, { where: { id: userId } });
+//     }
+//     response.json({ received: true });
+//     console.log("🔥 Webhook received:", event.type);
+// };
+
+
 export const stripeWebhooks = async (request, response) => {
     const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
     const sig = request.headers["stripe-signature"];
@@ -350,13 +346,37 @@ export const stripeWebhooks = async (request, response) => {
         return response.status(400).send(`Webhook Error: ${error.message}`);
     }
 
+    // Handle the specific event
     if (event.type === "checkout.session.completed") {
-        const { orderId, userId } = event.data.object.metadata;
-        await Order.update({ isPaid: true, status: "Order Placed" }, { where: { id: orderId } });
-        await User.update({ cartItems: "{}" }, { where: { id: userId } });
+        const session = event.data.object;
+        
+        // Extract metadata
+        const orderId = session.metadata?.orderId;
+        const userId = session.metadata?.userId;
+
+        // CRITICAL FIX: Only update if orderId is NOT undefined
+        if (orderId) {
+            try {
+                await Order.update(
+                    { isPaid: true, status: "Order Placed" }, 
+                    { where: { id: orderId } }
+                );
+                
+                if (userId) {
+                    await User.update({ cartItems: "{}" }, { where: { id: userId } });
+                }
+                
+                console.log(`✅ Order ${orderId} updated to Paid!`);
+            } catch (dbError) {
+                console.error("❌ Database Update Error:", dbError.message);
+            }
+        } else {
+            console.log("⚠️ Webhook received but no orderId found in metadata. This is normal for 'stripe trigger'.");
+        }
     }
+
+    // Always send a 200 response to Stripe immediately
     response.json({ received: true });
-    console.log("🔥 Webhook received:", event.type);
 };
 
 
@@ -366,6 +386,22 @@ export const stripeWebhooks = async (request, response) => {
 // It will give you a webhook secret like:
 // Replace in .env:
 // STRIPE_WEBHOOK_SECRET=whsec_xxxxx
+// run this command in the console => stripe trigger checkout.session.completed
+
+
+// Terminal 1: Running your Backend (nodemon main.js).
+
+// Terminal 2: Running => stripe listen --forward-to localhost:4000/webhook/stripe>=
+
+// Terminal 3: To run the =>
+
+// To test the logic
+ // stripe trigger checkout.session.completed
+
+// To actually listen for real payments from your browser
+// stripe listen --forward-to localhost:4000/webhook/stripe
+
+//>= command.
 
 
 

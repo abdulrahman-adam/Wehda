@@ -12,8 +12,10 @@ const ProductDetails = () => {
 
   const [thumbnail, setThumbnail] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
-  const [selectedVariants, setSelectedVariants] = useState([]);
-  const [selectedColors, setSelectedColors] = useState([]);
+  
+  // MODIFICATION : On passe d'un tableau [] à une valeur unique ""
+  const [selectedVariant, setSelectedVariant] = useState("");
+  const [selectedColor, setSelectedColor] = useState("");
 
   const product = useMemo(() => {
     return products.find((item) => String(item.id) === String(id));
@@ -28,33 +30,32 @@ const ProductDetails = () => {
       setRelatedProducts(filtered.slice(0, 5));
       setThumbnail(product.image[0]);
     }
-    // Reset selections on product change
-    setSelectedVariants([]);
-    setSelectedColors([]);
+    // MODIFICATION : Reset avec des chaînes vides
+    setSelectedVariant("");
+    setSelectedColor("");
     window.scrollTo(0, 0);
   }, [id, product, products]);
 
+  // MODIFICATION : Logique de choix unique (remplace l'ancienne valeur)
   const toggleVariant = (v) => {
-    setSelectedVariants((prev) =>
-      prev.includes(v) ? prev.filter((i) => i !== v) : [...prev, v],
-    );
+    setSelectedVariant(v);
   };
 
   const toggleColor = (c) => {
-    setSelectedColors((prev) =>
-      prev.includes(c) ? prev.filter((i) => i !== c) : [...prev, c],
-    );
+    setSelectedColor(c);
   };
 
   const handleAddToCart = (isBuyNow = false) => {
-    if (product.variants?.length > 0 && selectedVariants.length === 0) {
+    // MODIFICATION : Vérification de la chaîne (non vide)
+    if (product.variants?.length > 0 && !selectedVariant) {
       return toast.error("Veuillez sélectionner une taille/option");
     }
-    if (product.colors?.length > 0 && selectedColors.length === 0) {
+    if (product.colors?.length > 0 && !selectedColor) {
       return toast.error("Veuillez sélectionner une couleur");
     }
 
-    const variantKey = `${selectedVariants.join("-")}-${selectedColors.join("-")}`;
+    // MODIFICATION : Construction de la clé avec les valeurs uniques
+    const variantKey = `${selectedVariant}-${selectedColor}`;
     addToCart(product.id, variantKey);
 
     if (isBuyNow) navigate("/cart");
@@ -144,7 +145,7 @@ const ProductDetails = () => {
 
             <div className="h-px bg-gradient-to-r from-gray-200 to-transparent w-full mb-10" />
 
-            {/* COLOR SELECTOR WITH TEXT DISPLAY */}
+            {/* COLOR SELECTOR */}
             {product.colors?.length > 0 && (
               <div className="mb-10">
                 <div className="flex justify-between items-center mb-5">
@@ -152,7 +153,7 @@ const ProductDetails = () => {
                     Couleur Sélectionnée
                   </h3>
                   <span className="text-[10px] font-black uppercase text-indigo-600">
-                    {selectedColors.length > 0 ? selectedColors.join(", ") : "Choisir"}
+                    {selectedColor || "Choisir"}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-4">
@@ -162,7 +163,7 @@ const ProductDetails = () => {
                       onClick={() => toggleColor(c)}
                       style={{ backgroundColor: c.toLowerCase() }}
                       className={`w-10 h-10 rounded-full border-4 transition-all shadow-md active:scale-90 ${
-                        selectedColors.includes(c) ? "border-white ring-2 ring-black scale-110" : "border-white hover:scale-105"
+                        selectedColor === c ? "border-white ring-2 ring-black scale-110" : "border-white hover:scale-105"
                       }`}
                       title={c}
                     />
@@ -171,7 +172,7 @@ const ProductDetails = () => {
               </div>
             )}
 
-            {/* VARIANTS / SIZE SELECTOR */}
+            {/* VARIANTS SELECTOR */}
             {product.variants?.length > 0 && (
               <div className="mb-10">
                 <h3 className="text-[10px] font-black uppercase text-gray-400 mb-5 tracking-[0.2em]">Tailles Disponibles</h3>
@@ -181,7 +182,7 @@ const ProductDetails = () => {
                       key={i}
                       onClick={() => toggleVariant(v)}
                       className={`px-6 py-3 rounded-xl border-2 font-black text-xs uppercase transition-all tracking-widest ${
-                        selectedVariants.includes(v)
+                        selectedVariant === v
                           ? "bg-black border-black text-white shadow-lg -translate-y-1"
                           : "bg-white border-gray-100 text-gray-600 hover:border-gray-300"
                       }`}
@@ -232,7 +233,7 @@ const ProductDetails = () => {
           </div>
         </div>
 
-<hr className="mt-16 bg-gray-50"/>
+        <hr className="mt-16 bg-gray-50"/>
         {/* RELATED PRODUCTS */}
         <div className="mt-2 pt-20 border-t border-gray-100">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
