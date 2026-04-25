@@ -10,11 +10,11 @@ import 'swiper/css/pagination';
 const Slider = () => {
   // Chemins directs vers tes images dans /public/images/
   const myImages = [
-    { url: '/slider/banana_image_1.png', title: 'Ordinateure', desc: 'Vitesse de traitement Go' },
-    { url: '/slider/basmati_rice_image.png', title: 'Mobile', desc: 'Connexions Redis actives' },
-    { url: '/slider/carrot_image.png', title: 'Citron', desc: 'Scalabilité 100k' },
-    { url: '/slider/apple_image.png', title: 'Ordinateur', desc: 'Scalabilité 100k' },
-    { url: '/slider/barley_image.png', title: 'Ordinateur', desc: 'Scalabilité 100k' },
+    { url: '/slider/banana_image_1.png', title: 'Bananes', desc: 'Riche en nutriments essentiels' },
+    { url: '/slider/basmati_rice_image.png', title: 'Rizs', desc: 'Sélectionné parmi les meilleures récoltes' },
+    { url: '/slider/carrot_image.png', title: 'Carottes', desc: 'Récoltées à pleine maturité' },
+    { url: '/slider/apple_image.png', title: 'Pommes', desc: 'Cueillies avec soin à la main' },
+    { url: '/slider/barley_image.png', title: 'orge', desc: 'Saveur douce, subtilement boisée' },
   ];
 
   return (
