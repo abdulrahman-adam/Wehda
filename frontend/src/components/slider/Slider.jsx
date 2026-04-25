@@ -18,7 +18,7 @@ const Slider = () => {
   ];
 
   return (
-    <div style={{ width: '100%', margin: '1 auto', padding: '1px 10px', position: 'relative', height: '400px'}}>
+    <div style={{ width: '100%', margin: '1 auto', padding: '1px 10px', position: 'relative', height: '350px'}}>
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={15}
