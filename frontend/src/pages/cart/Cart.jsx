@@ -19,6 +19,7 @@ const Cart = () => {
     navigate,
     getCartAmount,
     setShowUserLogin,
+    clearCart,
   } = useAppContext();
 
   const [cartArray, setCartArray] = useState([]);
@@ -74,6 +75,7 @@ const Cart = () => {
         const { data } = await axios.post("/api/order/cod", orderData);
         if (data.success) {
           toast.success(data.message);
+          clearCart(); // the function make clear the cart
           navigate("/my-orders");
         } else {
           toast.error(data.message);

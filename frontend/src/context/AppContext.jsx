@@ -369,7 +369,9 @@ export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
 
   // --- State ---
-  const [user, setUser] = useState(null); 
+  // const [user, setUser] = useState(null); 
+  // To this:
+const [user, setUser] = useState(undefined);
   const [adminData, setAdminData] = useState(null); 
   const [isSeller, setIsSeller] = useState(null);
   const [orders, setOrders] = useState([]); 
@@ -400,13 +402,42 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
-  const fetchUser = async () => {
+
+  
+  // const fetchUser = async () => {
+  //   try {
+  //     const { data } = await axios.get("/api/user/is-auth");
+  //     if (data.success) {
+  //       setUser(data.user);
+  //       let rawCart = data.user.cartItems;
+  //       // Recursive JSON parsing for Sequelize strings
+  //       if (typeof rawCart === "string") {
+  //         try {
+  //           while (typeof rawCart === "string") { rawCart = JSON.parse(rawCart); }
+  //           setCartItems(rawCart || {});
+  //         } catch { setCartItems({}); }
+  //       } else {
+  //         setCartItems(rawCart || {});
+  //       }
+  //     }
+  //   } catch {
+  //     setUser(null);
+  //   }
+  // };
+
+
+
+  // --- In your State initialization ---
+
+
+const fetchUser = async () => {
     try {
       const { data } = await axios.get("/api/user/is-auth");
       if (data.success) {
         setUser(data.user);
+        
+        // --- Your Cart Logic ---
         let rawCart = data.user.cartItems;
-        // Recursive JSON parsing for Sequelize strings
         if (typeof rawCart === "string") {
           try {
             while (typeof rawCart === "string") { rawCart = JSON.parse(rawCart); }
@@ -415,11 +446,18 @@ export const AppContextProvider = ({ children }) => {
         } else {
           setCartItems(rawCart || {});
         }
+      } else {
+        // If server responds but success is false
+        setUser(null); 
       }
-    } catch {
-      setUser(null);
+    } catch (error) {
+      // If unauthorized (401) or network error
+      setUser(null); 
     }
-  };
+};
+
+
+
 
   // --- ORDERS (Dynamic: Seller vs User) ---
   const fetchOrders = async () => {
@@ -570,6 +608,12 @@ export const AppContextProvider = ({ children }) => {
     return parseFloat(total.toFixed(2));
   };
 
+  // THE FUNCTION CLEAR CART
+  const clearCart = () => {
+  setCartItems({});
+};
+
+
   // --- LIFECYCLE ---
   useEffect(() => {
     const init = async () => {
@@ -616,7 +660,7 @@ export const AppContextProvider = ({ children }) => {
     currency, navigate, user, setUser, isSeller, setIsSeller, adminData,getChildCategories, setAdminData,contacts, getAllContacts,deleteProduct, deleteCategory,
     products, categories, cartItems, setCartItems, orders, setOrders,deleteContact,
     showUserLogin, setShowUserLogin, fetchUser, fetchOrders, fetchProducts,deleteOrder,addToCart, removeFromCart,
-    fetchCategories, getCartCount, getCartAmount, updateCartItems, axios, searchQuery, setSearchQuery
+    fetchCategories, getCartCount, getCartAmount, updateCartItems, axios, searchQuery, setSearchQuery,clearCart
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

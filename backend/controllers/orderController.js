@@ -356,4 +356,19 @@ export const stripeWebhooks = async (request, response) => {
         await User.update({ cartItems: "{}" }, { where: { id: userId } });
     }
     response.json({ received: true });
+    console.log("🔥 Webhook received:", event.type);
 };
+
+
+// npm install -g stripe
+// stripe login
+// stripe listen --forward-to localhost:4000/webhook/stripe
+// It will give you a webhook secret like:
+// Replace in .env:
+// STRIPE_WEBHOOK_SECRET=whsec_xxxxx
+
+
+
+
+// PRODUCTION
+// Set webhook in Stripe Dashboard: => https://yourdomain.com/webhook/stripe

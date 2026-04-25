@@ -39,6 +39,14 @@ const App = () => {
     setShowUserLogin(false);
   }, [pathname, setShowUserLogin]);
 
+  // 1. Wait for Auth check to complete
+  // This prevents the <Navigate to="/" /> from running before the server answers
+  if (user === undefined) {
+    return <Loading />; 
+  }
+
+
+  // 2. Existing Seller check
   if (isSellerPath && isSeller === null) return <Loading />;
 
   return (

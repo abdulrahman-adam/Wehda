@@ -151,7 +151,6 @@ const MyOrders = () => {
                           {item.product?.name}
                         </h2>
 
-
                         <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
                           {/* <p className="text-xs text-gray-500">
                             Catégorie :{" "}
@@ -161,13 +160,15 @@ const MyOrders = () => {
                           </p> */}
 
                           <p className="text-xs text-gray-500">
-  Catégorie :{" "}
-  <span className="text-gray-700 font-medium">
-    {/* This shows "Parent > Child" if parent exists */}
-    {item.product?.categ?.parent?.text ? `${item.product.categ.parent.text} > ` : ""}
-    {item.product?.categ?.text || "Non spécifiée"}
-  </span>
-</p>
+                            Catégorie :{" "}
+                            <span className="text-gray-700 font-medium">
+                              {/* This shows "Parent > Child" if parent exists */}
+                              {item.product?.categ?.parent?.text
+                                ? `${item.product.categ.parent.text} > `
+                                : ""}
+                              {item.product?.categ?.text || "Non spécifiée"}
+                            </span>
+                          </p>
                           {item.variant && (
                             <p className="text-xs text-gray-500">
                               Option :{" "}
@@ -178,8 +179,6 @@ const MyOrders = () => {
                           )}
                         </div>
 
-
-                        
                         <div className="flex items-center gap-3 mt-3">
                           <span className="px-2 py-1 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded-md uppercase">
                             Qté: {item.quantity || "1"}
@@ -208,7 +207,17 @@ const MyOrders = () => {
                       </div>
 
                       <p className="text-gray-400 text-[10px] font-medium">
-                       Mise à jour: {new Date(order.updatedAt || order.createdAt).toLocaleDateString("fr-FR")} à {new Date(order.updatedAt || order.createdAt).toLocaleTimeString("fr-FR", { hour: '2-digit', minute: '2-digit' })}
+                        Mise à jour:{" "}
+                        {new Date(
+                          order.updatedAt || order.createdAt,
+                        ).toLocaleDateString("fr-FR")}{" "}
+                        à{" "}
+                        {new Date(
+                          order.updatedAt || order.createdAt,
+                        ).toLocaleTimeString("fr-FR", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </p>
                     </div>
 
