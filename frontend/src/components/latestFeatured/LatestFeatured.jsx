@@ -10,7 +10,7 @@ const LatestFeatured = () => {
   const displayProducts = products.filter((p) => p.inStock).slice(0, 8);
 
   return (
-    <div className="mt-6 px-4 max-w-7xl mx-auto">
+    <div className="mt-6 px-2 max-w-7xl mx-auto">
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div className="max-w-2xl">
@@ -41,11 +41,15 @@ const LatestFeatured = () => {
       </div>
 
       {/* PRODUCT GRID */}
-      <div className="grid grid-cols-2 justify-items-center gap-3 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 w-full">
-        {displayProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      {/* PRODUCT GRID - Switch from grid to flex for better centering of few items */}
+<div className="flex flex-wrap justify-center gap-3 sm:gap-6 w-full">
+  {displayProducts.map((product) => (
+    /* We add a fixed width or responsive basis to keep them looking like a grid */
+    <div key={product.id} className="w-[calc(50%-6px)] md:w-[calc(33.33%-16px)] lg:w-[calc(25%-18px)] flex justify-center">
+      <ProductCard product={product} />
+    </div>
+  ))}
+</div>
       
       {/* DECORATIVE BOTTOM ELEMENT (Optional) */}
       <div className="mt-16 h-px bg-gradient-to-r from-transparent via-gray-100 to-transparent w-full" />

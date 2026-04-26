@@ -36,26 +36,28 @@ const CategoryDrillDown = ({ onClose }) => {
         </h3>
         
         {/* Horizontal Scroll Row */}
-        <div className="flex overflow-x-auto pb-8 px-6 gap-6 scrollbar-hide snap-x mx-auto justify-start sm:justify-center">
-          {parents.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => handleParentClick(cat)}
-              className="flex flex-col items-center group space-y-3 outline-none flex-shrink-0 snap-center"
-            >
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-50 flex items-center justify-center border-2 border-indigo-50 group-hover:border-indigo-600 transition-all duration-300 overflow-hidden shadow-sm">
-                 <img 
-                  src={cat.image || "/logo.jpeg"} 
-                  alt={cat.text}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <span className="font-bold text-[11px] uppercase tracking-tight text-gray-700 group-hover:text-indigo-600 transition-colors text-center w-20 line-clamp-1">
-                {cat.text}
-              </span>
-            </button>
-          ))}
+       <div className="w-full flex justify-center"> {/* Outer wrapper to ensure true centering */}
+  <div className="flex overflow-x-auto pb-8 px-6 gap-6 scrollbar-hide snap-x items-center justify-center sm:justify-center w-full sm:w-auto">
+    {parents.map((cat) => (
+      <button
+        key={cat.id}
+        onClick={() => handleParentClick(cat)}
+        className="flex flex-col items-center group space-y-3 outline-none flex-shrink-0 snap-center"
+      >
+        <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-50 flex items-center justify-center border-2 border-indigo-50 group-hover:border-indigo-600 transition-all duration-300 overflow-hidden shadow-sm">
+          <img 
+            src={cat.image || "/logo.jpeg"} 
+            alt={cat.text}
+            className="w-full h-full object-cover"
+          />
         </div>
+        <span className="font-bold text-[11px] uppercase tracking-tight text-gray-700 group-hover:text-indigo-600 transition-colors text-center w-20 line-clamp-1">
+          {cat.text}
+        </span>
+      </button>
+    ))}
+  </div>
+</div>
         <div className="h-[1px] bg-gray-100 w-full mb-4"></div>
       </div>
 
@@ -81,7 +83,7 @@ const CategoryDrillDown = ({ onClose }) => {
         </div>
 
         {/* Sub-categories Horizontal Scroll Row */}
-        <div className="flex overflow-x-auto pb-8 px-6 gap-6 scrollbar-hide snap-x mx-auto justify-start sm:justify-center">
+        <div className="flex overflow-x-auto pb-8 px-6 gap-6 scrollbar-hide snap-x mx-auto justify-center sm:justify-center">
           {children.map((child) => (
             <button
               key={child.id}
