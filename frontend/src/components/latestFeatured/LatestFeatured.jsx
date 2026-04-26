@@ -10,7 +10,7 @@ const LatestFeatured = () => {
   const displayProducts = products.filter((p) => p.inStock).slice(0, 8);
 
   return (
-    <div className="mt-20 px-4 max-w-7xl mx-auto">
+    <div className="mt-6 px-4 max-w-7xl mx-auto">
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div className="max-w-2xl">

@@ -14,3 +14,6 @@ createRoot(document.getElementById('root')).render(
   </AppContextProvider>
   </BrowserRouter>,
 )
+
+
+// sudo nano /etc/nginx/sites-available/zooolna.com

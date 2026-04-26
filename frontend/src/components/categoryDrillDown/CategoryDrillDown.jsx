@@ -31,7 +31,7 @@ const CategoryDrillDown = ({ onClose }) => {
           : "-translate-x-full opacity-0 absolute pointer-events-none"
         }`}
       >
-        <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6 text-center mt-8">
+        <h3 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.3em] mb-6 text-center mt-2">
           Explorer les Collections
         </h3>
         
