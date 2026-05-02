@@ -71,26 +71,26 @@ const Contact = () => {
 
           <div className="space-y-5">
             <a
-              href="tel:+33749992487"
+              href="tel:+33 7 66 42 20 95"
               className="flex items-center gap-5 group w-fit p-2 -ml-2 rounded-2xl hover:bg-white hover:shadow-sm transition-all duration-300"
             >
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-600 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 shadow-sm">
                 <i className="bi bi-telephone text-xl"></i>
               </div>
               <span className="text-lg font-semibold text-gray-700 group-hover:text-indigo-600 transition">
-                07 49 99 24 87
+                07 66 42 20 95
               </span>
             </a>
 
             <a
-              href="mailto:oumabarar.paris@gmail.com"
+              href="mailto:contact@wehda.fr"
               className="flex items-center gap-5 group w-fit p-2 -ml-2 rounded-2xl hover:bg-white hover:shadow-sm transition-all duration-300"
             >
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-600 group-hover:scale-110 group-hover:-rotate-12 transition-all duration-300 shadow-sm">
                 <i className="bi bi-envelope text-xl"></i>
               </div>
               <span className="text-lg font-semibold text-gray-700 group-hover:text-indigo-600 transition">
-                oumabarar.paris@gmail.com
+                contact@wehda.fr
               </span>
             </a>
 
@@ -98,9 +98,10 @@ const Contact = () => {
               <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-600 group-hover:bounce transition-all">
                 <i className="bi bi-geo-alt text-xl"></i>
               </div>
-              <a href="https://share.google/DaR35i6fAsn97T6VS" target="_blank" rel="noreferrer">
+              <a href="https://www.google.com/search?q=64%20Rue%20Louis%20Blanc%2C%2075010%20Paris&shem=rimspwouoe&shndl=40&source=sh%2Fx%2Floc%2Fgeo%2Fm1%2F1&kgs=ed9f0e74030534e3" target="_blank" rel="noreferrer">
                 <span className="text-lg font-semibold text-gray-700 pt-2 block hover:text-indigo-600 transition duration-300">
-                  12 Rue Doudeauville 75018 Paris
+                  64 Rue Louis Blanc
+75010 Paris
                 </span>
               </a>
             </div>
@@ -109,14 +110,7 @@ const Contact = () => {
           {/* MAP WITH PROFESSIONAL WRAPPER */}
           <div className="group w-full h-80 rounded-[2rem] overflow-hidden border border-indigo-100 shadow-2xl grayscale hover:grayscale-0 transition-all duration-1000 ease-in-out relative transform hover:scale-[1.01]">
             <div className="absolute inset-0 bg-indigo-500/5 mix-blend-overlay pointer-events-none group-hover:opacity-0 transition-opacity duration-700" />
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m23!1m12!1m3!1d10493.54164627176!2d2.339577525216331!3d48.88899163688157!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m8!3e6!4m0!4m5!1s0x47e66e64d6addfdb%3A0xfebe60e73d2c6f96!2s12%20Rue%20Doudeauville%2C%2075018%20Paris!3m2!1d48.888979!2d2.3580315!5e0!3m2!1sfr!2sfr!4v1777655639649!5m2!1sfr!2sfr"
-              className="w-full h-full object-cover"
-              style={{ border: 0 }}
-              allowFullScreen=""
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2623.6577062817532!2d2.3579370751242754!3d48.883801498919766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e70546f1479%3A0xcb1341dae1e0e515!2s64%20Rue%20Louis%20Blanc%2C%2075010%20Paris!5e0!3m2!1sfr!2sfr!4v1777751592919!5m2!1sfr!2sfr" width="600" height="450" style={{ border: 0 }} allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
         </div>
 

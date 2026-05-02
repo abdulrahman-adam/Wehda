@@ -20,7 +20,7 @@ const PrivacyPolicy = () => {
               Politique de Confidentialité
             </h1>
             <p className="mt-4 text-slate-400 text-sm md:text-base lg:text-lg">
-             OUMABARAR • Mise à jour : {lastUpdate}
+             WEHADA • Mise à jour : {lastUpdate}
             </p>
           </header>
 
@@ -45,8 +45,8 @@ const PrivacyPolicy = () => {
                 </div>
                 <h2 className="text-xl md:text-2xl font-bold text-slate-800">Qui traite vos données ?</h2>
                 <p className="text-slate-600 leading-relaxed">
-                  Le traitement est assuré par <strong>OUMABARAR</strong>. Pour toute question, notre délégué à la protection des données (DPO) est joignable directement à : 
-                  <a href="mailto:oumabarar.paris@gmail.com" className="block mt-2 text-teal-600 hover:underline font-medium">oumabarar.paris@gmail.com</a>
+                  Le traitement est assuré par <strong>WEHADA</strong>. Pour toute question, notre délégué à la protection des données (DPO) est joignable directement à : 
+                  <a href="mailto:WEHADA.paris@gmail.com" className="block mt-2 text-teal-600 hover:underline font-medium">WEHADA.paris@gmail.com</a>
                 </p>
               </section>
 
@@ -106,7 +106,7 @@ const PrivacyPolicy = () => {
                 <p className="text-slate-400 mt-1">Notre équipe juridique est à votre écoute.</p>
               </div>
               <a 
-                href="mailto:oumabarar.paris@gmail.com" 
+                href="mailto:WEHADA.paris@gmail.com" 
                 className="flex items-center gap-2 bg-teal-500 hover:bg-teal-400 text-slate-900 font-bold py-3 px-8 rounded-full transition-all transform hover:scale-105"
               >
                 <Mail size={18} />

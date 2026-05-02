@@ -29,7 +29,7 @@ const About = () => {
               </span>
             </h1>
             <p className="text-slate-400 text-lg md:text-2xl leading-relaxed font-light">
-              OUMABARAR est né en 2024 d'une ambition simple : créer un écosystème où l'excellence du produit rencontre la fluidité technologique absolue.
+              WEHADA est né en 2024 d'une ambition simple : créer un écosystème où l'excellence du produit rencontre la fluidité technologique absolue.
             </p>
           </div>
         </div>
@@ -55,7 +55,7 @@ const About = () => {
               </div>
               <h3 className="text-3xl font-bold text-slate-900 mb-5">Notre Vision</h3>
               <p className="text-slate-600 text-lg leading-relaxed">
-                Devenir la place de marché de référence pour les produits premium, où chaque choix sur OUMABARAR est un gage de qualité et de style.
+                Devenir la place de marché de référence pour les produits premium, où chaque choix sur WEHADA est un gage de qualité et de style.
               </p>
             </div>
           </div>
@@ -113,7 +113,7 @@ const About = () => {
       <section className="max-w-7xl mx-auto px-6 pb-24">
         <div className="bg-indigo-600 rounded-[3rem] p-12 md:p-20 text-center text-white relative overflow-hidden">
           <div className="relative z-10">
-            <h2 className="text-3xl md:text-5xl font-black mb-8">Prêt à vivre l'expérience OUMABARAR ?</h2>
+            <h2 className="text-3xl md:text-5xl font-black mb-8">Prêt à vivre l'expérience WEHADA ?</h2>
             <button className="bg-white text-indigo-600 font-bold py-5 px-12 rounded-full hover:bg-teal-400 hover:text-white transition-all transform hover:scale-105 shadow-xl">
              <a href="/"> Découvrir la Boutique</a>
             </button>

@@ -23,19 +23,19 @@ const Terms = () => {
       id: 'obj',
       icon: <FileText className="w-5 h-5" />,
       title: "Objet et Champ d'Application",
-      content: "Les présentes Conditions Générales de Vente (CGV) régissent de manière exclusive les relations contractuelles entre OUMABARAR et toute personne effectuant un achat sur le site. Toute commande implique l'acceptation sans réserve des présentes conditions."
+      content: "Les présentes Conditions Générales de Vente (CGV) régissent de manière exclusive les relations contractuelles entre WEHADA et toute personne effectuant un achat sur le site. Toute commande implique l'acceptation sans réserve des présentes conditions."
     },
     {
       id: 'price',
       icon: <CreditCard className="w-5 h-5" />,
       title: "Tarifs et Paiement",
-      content: "Les prix sont indiqués en Euros (€) toutes taxes comprises (TTC). OUMABARAR se réserve le droit de modifier ses prix à tout moment. Le paiement est exigible immédiatement à la commande via nos interfaces sécurisées (Stripe, PayPal)."
+      content: "Les prix sont indiqués en Euros (€) toutes taxes comprises (TTC). WEHADA se réserve le droit de modifier ses prix à tout moment. Le paiement est exigible immédiatement à la commande via nos interfaces sécurisées (Stripe, PayPal)."
     },
     {
       id: 'ship',
       icon: <Truck className="w-5 h-5" />,
       title: "Livraison",
-      content: "Les produits sont livrés à l'adresse indiquée lors de la commande. Les délais de livraison ne sont donnés qu'à titre indicatif. OUMABARAR ne pourra être tenu responsable des retards liés aux transporteurs."
+      content: "Les produits sont livrés à l'adresse indiquée lors de la commande. Les délais de livraison ne sont donnés qu'à titre indicatif. WEHADA ne pourra être tenu responsable des retards liés aux transporteurs."
     },
     {
       id: 'ret',
@@ -67,7 +67,7 @@ const Terms = () => {
             Conditions Générales <span className="text-indigo-600">de Vente</span>
           </h1>
           <p className="text-slate-500 text-lg max-w-2xl mx-auto">
-            Dernière mise à jour : 30 Avril 2026. Veuillez lire attentivement nos conditions avant toute transaction sur OUMABARAR.
+            Dernière mise à jour : 30 Avril 2026. Veuillez lire attentivement nos conditions avant toute transaction sur WEHADA.
           </p>
         </div>
 

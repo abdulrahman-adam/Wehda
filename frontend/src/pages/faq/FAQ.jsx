@@ -24,7 +24,7 @@ const FAQ = () => {
 
   const faqData = {
     general: [
-      { q: "Qu'est-ce que OUMABARAR ?", a: "OUMABARAR est une marketplace premium proposant une sélection exclusive de produits de haute qualité, rigoureusement sélectionnés pour leur design et leur durabilité." },
+      { q: "Qu'est-ce que WEHADA ?", a: "WEHADA est une marketplace premium proposant une sélection exclusive de produits de haute qualité, rigoureusement sélectionnés pour leur design et leur durabilité." },
       { q: "Les produits sont-ils authentiques ?", a: "Absolument. Nous travaillons directement avec les créateurs et les marques officielles pour garantir l'authenticité de chaque article vendu sur notre plateforme." }
     ],
     orders: [
@@ -33,7 +33,7 @@ const FAQ = () => {
     ],
     shipping: [
       { q: "Quels sont les délais de livraison ?", a: "Pour la France métropolitaine, comptez 2 à 4 jours ouvrés. Pour l'international, les délais varient entre 5 et 10 jours selon la destination." },
-      { q: "Livrez-vous partout dans le monde ?", a: "Oui, OUMABARAR livre dans plus de 50 pays. Les frais de port sont calculés automatiquement lors du passage en caisse." }
+      { q: "Livrez-vous partout dans le monde ?", a: "Oui, WEHADA livre dans plus de 50 pays. Les frais de port sont calculés automatiquement lors du passage en caisse." }
     ],
     returns: [
       { q: "Quelle est votre politique de retour ?", a: "Vous disposez de 14 jours après réception pour nous retourner un article s'il ne vous convient pas. Le produit doit être dans son emballage d'origine et non utilisé." },

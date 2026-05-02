@@ -1,4 +1,4 @@
-name: Deploy Oumabarar to VPS
+name: Deploy Wehda to VPS
 
 on:
   push:
