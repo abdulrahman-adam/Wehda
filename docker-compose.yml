@@ -4,7 +4,7 @@ services:
   # ========================
   db:
     image: mysql:8.0
-    container_name: oumabarar_db
+    container_name: wehda_db
     restart: always
     # Optimized for compatibility with Node/PHP drivers
     command: --default-authentication-plugin=mysql_native_password
@@ -16,9 +16,9 @@ services:
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3311:3306"
+      - "3312:3306"
     volumes:
-      - oumabarar_mysql_data:/var/lib/mysql
+      - wehda_mysql_data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD}"]
       interval: 10s
@@ -26,14 +26,14 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - oumabarar-network
+      - wehda-network
 
   # ========================
   # BACKEND (Node.js)
   # ========================
   backend:
     build: ./backend
-    container_name: oumabarar_backend
+    container_name: wehda_backend
     restart: always
     env_file:
       - ./backend/.env
@@ -41,34 +41,34 @@ services:
       - MYSQL_HOST=db  # Internal Docker DNS name
       - PORT=5000
     ports:
-      - "4003:5000"
+      - "4004:5000"
     depends_on:
       db:
         condition: service_healthy
     networks:
-      - oumabarar-network
+      - wehda-network
 
   # ========================
   # FRONTEND (React/Vite + Nginx)
   # ========================
   frontend:
     build: ./frontend
-    container_name: oumabarar_frontend
+    container_name: wehda_frontend
     restart: always
     ports:
-      - "3004:80"
+      - "3005:80"
     networks:
-      - oumabarar-network
+      - wehda-network
 
   # ========================
   # PHPMYADMIN
   # ========================
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: oumabarar_phpmyadmin
+    container_name: wehda_phpmyadmin
     restart: always
     ports:
-      - "8093:80"
+      - "8094:80"
     environment:
       - PMA_HOST=db
       - PMA_PORT=3306
@@ -77,11 +77,11 @@ services:
       db:
         condition: service_healthy
     networks:
-      - oumabarar-network
+      - wehda-network
 
 volumes:
-  oumabarar_mysql_data:
+  wehda_mysql_data:
 
 networks:
-  oumabarar-network:
+  wehda-network:
     driver: bridge
