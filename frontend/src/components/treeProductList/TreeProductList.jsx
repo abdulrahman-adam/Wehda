@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import ProductCard from "../../components/productCard/ProductCard";
+import CategoryHeroSlider from "../categoryHeroSlider/CategoryHeroSlider";
 
 const TreeProductList = () => {
   const { products, categories } = useAppContext();
@@ -76,6 +77,8 @@ const TreeProductList = () => {
 
   return (
     <div className="mt-16 px-4 min-h-[60vh] max-w-7xl mx-auto flex flex-col items-center">
+
+      
       
       {/* BREADCRUMBS */}
       <nav className="w-full flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-gray-400 mb-8 self-start">
@@ -121,13 +124,16 @@ const TreeProductList = () => {
                 to={`${location.pathname.replace(/\/$/, "")}/${sub.path}`}
                 className="group flex flex-col items-center"
               >
-                <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-4 bg-white shadow-sm border-2 border-transparent group-hover:border-orange-500 transition-all">
-                  <img
-                    src={sub.image || "/logo.jpeg"}
-                    alt={sub.text}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                </div>
+                <div 
+  className="w-16 h-16 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-4 shadow-sm border-2 border-transparent group-hover:border-orange-500 transition-all"
+  style={{ backgroundColor: sub.bgColor || '#ffffff' }}
+>
+  <img
+    src={sub.image || "/logo.jpeg"}
+    alt={sub.text}
+    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+  />
+</div>
                 <span className="text-[10px] sm:text-[11px] font-bold text-gray-800 group-hover:text-orange-600 uppercase text-center">
                   {sub.text}
                 </span>
@@ -156,7 +162,7 @@ const TreeProductList = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 bg-gray-50 rounded-[40px] w-full border-2 border-dashed border-gray-200">
+          <div className="text-center py-20 bg-gray-50 rounded-[40px] w-full border-2 border-dashed border-gray-200 mb-6">
             <p className="text-gray-400 font-bold uppercase text-xs tracking-widest">
               Aucun produit trouvé
             </p>
@@ -168,3 +174,5 @@ const TreeProductList = () => {
 };
 
 export default TreeProductList;
+
+

@@ -32,27 +32,62 @@ const AdminLayout = () => {
     return <Navigate to="/admin" />;
   }
 
+  // const logout = async () => {
+  //   try {
+  //     const { data } = await axios.get("/api/seller/logout");
+  //     if (data.success) {
+  //       setIsSeller(false);
+  //       setUserData(null);
+  //       if (setUser) setUser(null);
+  //       toast.success(data.message);
+  //       navigate("/");
+  //     }
+  //   } catch (error) {
+  //     toast.error(error?.response?.data?.message || error.message);
+  //   }
+  // };
+
+
   const logout = async () => {
-    try {
-      const { data } = await axios.get("/api/seller/logout");
-      if (data.success) {
-        setIsSeller(false);
-        setUserData(null);
-        if (setUser) setUser(null);
-        toast.success(data.message);
-        navigate("/");
+  try {
+    const { data } = await axios.get("/api/seller/logout");
+
+    if (data && data.success) {
+      // 1. Check if setters are actually functions before calling
+      if (typeof setIsSeller === 'function') {
+          setIsSeller(false);
       }
-    } catch (error) {
-      toast.error(error?.response?.data?.message || error.message);
+      
+      if (typeof setUserData === 'function') {
+          setUserData(null);
+      }
+
+      if (typeof setUser === 'function') {
+          setUser(null);
+      }
+
+      // 2. Ensure toast exists and is called correctly
+      toast.success(data.message || "Déconnecté");
+
+      // 3. Ensure navigate is a function
+      if (typeof navigate === 'function') {
+          navigate("/");
+      } else {
+          window.location.href = "/"; // Fallback if navigate fails
+      }
     }
-  };
+  } catch (error) {
+    console.error("Full logout error:", error);
+    toast.error(error?.response?.data?.message || error.message);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* --- NAVBAR --- */}
       <div className="flex items-center justify-between px-4 md:px-8 border-b border-gray-300 py-3 bg-white sticky top-0 z-10" style={{height: "55px"}}>
         <Link to='/'>
-          <img src="/logo.jpeg" alt="logo" className="cursor-pointer md:w-38" style={{width: "55px", height: "55px"}}/>
+          <img src="/logo.png" alt="logo" className="cursor-pointer md:w-38" style={{width: "55px", height: "55px"}}/>
         </Link>
 
         <div className="flex items-center gap-3 sm:gap-5 text-gray-600">

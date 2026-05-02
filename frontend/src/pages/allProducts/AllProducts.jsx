@@ -38,20 +38,29 @@ const AllProducts = () => {
         </p>
       </div>
 
+
       {/* --- GRID SYSTEM: 1 COLUMN (STACKED ROWS) ON MOBILE --- */}
-      <div className="grid grid-cols-2 justify-items-center px-[2px] sm:flex sm:flex-wrap sm:justify-center gap-2 md:gap-8 w-full max-w-7xl mx-auto">
-        {Array.isArray(filteredProducts) && filteredProducts.length > 0 ? (
-          filteredProducts
-            .filter((product) => product.inStock)
-            .map((product, index) => (
-              <ProductCard key={index} product={product} />
-            ))
-        ) : (
-          <div className="col-span-2 w-full sm:max-w-md mx-auto mb-8 px-4 py-8 text-center text-sm sm:text-base text-gray-500 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
-        Désolé, nous n'avons trouvé aucun produit correspondant.
-      </div>
-        )}
-      </div>
+      {/* --- FIXED GRID SYSTEM --- */}
+<div className="flex flex-wrap justify-center gap-y-6 gap-x-2 sm:gap-8 w-full max-w-7xl mx-auto px-4">
+  {Array.isArray(filteredProducts) && filteredProducts.length > 0 ? (
+    filteredProducts
+      .filter((product) => product.inStock)
+      .map((product, index) => (
+        /* Use the same width logic as your 'Good' code to ensure 2 columns on mobile */
+        <div key={index} className="w-[calc(50%-8px)] sm:w-auto flex justify-center">
+          <ProductCard product={product} />
+        </div>
+      ))
+  ) : (
+    /* Error message */
+    <div className="w-full sm:max-w-md mx-auto mb-8 px-4 py-8 text-center text-gray-500 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
+      Désolé, nous n'avons trouvé aucun produit correspondant.
+    </div>
+  )}
+</div>
+
+
+
     </div>
   );
 };

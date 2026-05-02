@@ -1,107 +1,97 @@
 
-import jwt from "jsonwebtoken";
-import User from "../models/User.js"; // Make sure to import your User model
 
-//the funcrtion Seller Login
-export const sellerLogin = async(req, res) => {
+
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import bcrypt from "bcrypt"; // Required to check the hashed password
+
+// 1. Seller/Admin Login Function
+export const sellerLogin = async (req, res) => {
   try {
-      // Getting the email and password from req.body
-    const {email, password} =req.body;
-    // Cheacking if the email and password has role Seller
-    if(password === process.env.SELLER_PASSWORD && email === process.env.SELLER_EMAIL) {
-        // genrate the token
-        const token = jwt.sign({email}, process.env.JWT_SECRET, {expiresIn: '7d'})
-        // send the to token to kookie
-         res.cookie('sellerToken', token, {
-            httpOnly: true, // Prevent Javascript to access cookie
-            secure:process.env.NODE_ENV === 'production', // Use secure cookie in production
-            sameSite:process.env.NODE_ENV === 'production' ? 'none' : 'strict', // CSRF protection
-            maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration time
-        });
-        // send the cookie to response
-        return res.json({success: true, message: "Logged In"}); 
+    const { email, password } = req.body;
+
+    // FIND: Look for the user in the DB
+    const user = await User.findOne({ where: { email } });
+
+    // CHECK: Does user exist AND is he an ADMIN?
+    if (!user || user.role !== 'ADMIN') {
+      return res.json({ success: false, message: "Accès refusé: Identifiants non reconnus." });
+    }
+
+    // VERIFY: Check if the password is correct (assuming you use bcrypt for registration)
+    // If you are using plain text (not recommended), use: if (password === user.password)
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (isMatch) {
+      // Generate token using the database ID
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+      // Send to cookie
+      res.cookie('sellerToken', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      return res.json({ success: true, message: "Connecté avec succès" });
     } else {
-        // Cheaking if the password and email not matching with seller credentials
-        res.json({success: false, message: "Invalid Credentials"});
+      return res.json({ success: false, message: "Mot de passe incorrect" });
     }
   } catch (error) {
-    console.log(error.message);
-    res.json({success: false, message: error.message})
+    console.error("Login Error:", error.message);
+    res.json({ success: false, message: error.message });
   }
-}
-
-
-// the function Cheack Seller is Auth
-export const isSellerAuth = async(req, res) => {
-    try {
-        return res.json({success: true});
-    } catch (error) {
-        console.log(error.message)
-        res.json({success: false, message: error.message});
-    }
-}
-
-// export const getSellerProfile = async (req, res) => {
-//     try {
-//         // Return the credentials from your .env file
-//         return res.json({
-//             success: true,
-//             seller: {
-//                 name: "Administrateur", 
-//                 email: process.env.SELLER_EMAIL
-//             }
-//         });
-//     } catch (error) {
-//         res.json({ success: false, message: error.message });
-//     }
-// };
-
-
-
-
-
-export const getSellerProfile = async (req, res) => {
-    try {
-        const adminEmail = process.env.SELLER_EMAIL;
-
-        // Find the user in the database by email
-        const adminUser = await User.findOne({ 
-            where: { email: adminEmail },
-            attributes: ['name', 'email', 'role'] // Only get necessary fields
-        });
-
-        if (!adminUser) {
-            return res.json({ 
-                success: false, 
-                message: "Admin user not found in database" 
-            });
-        }
-
-        return res.json({
-            success: true,
-            seller: {
-                name: adminUser.name, // This will now be "Wehda Paris"
-                email: adminUser.email
-            }
-        });
-    } catch (error) {
-        console.error("Profile Fetch Error:", error.message);
-        res.json({ success: false, message: error.message });
-    }
 };
 
-// The function seller logout
-export const sellerLogout = async (req, res) => {
-    try {
-        // On clear the cookie 
-        res.clearCookie('sellerToken', {
-            httpOnly: true,
-            secure:process.env.NODE_ENV === 'production', 
-            sameSite:process.env.NODE_ENV === 'production' ? 'none' : 'strict', // CSRF protection
-        });
-        return res.json({success: true, message: "You Are Logged Out"})
-    } catch (error) {
-        console.log(error.message)
-        res.json({success: false, message: error.message});
+// 2. Check Seller Auth
+export const isSellerAuth = async (req, res) => {
+  try {
+    // This function is simple because the 'authSeller' middleware 
+    // already did the heavy lifting before reaching here.
+    return res.json({ success: true });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// 3. Get Seller Profile (Dynamic from Database)
+export const getSellerProfile = async (req, res) => {
+  try {
+    // We use req.sellerId which was set in the authSeller middleware
+    const adminUser = await User.findByPk(req.sellerId, {
+      attributes: ['name', 'email', 'role']
+    });
+
+    if (!adminUser) {
+      return res.json({ success: false, message: "Utilisateur non trouvé" });
     }
-}
+
+    return res.json({
+      success: true,
+      seller: {
+        name: adminUser.name,
+        email: adminUser.email
+      }
+    });
+  } catch (error) {
+    console.error("Profile Fetch Error:", error.message);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// 4. Seller Logout
+export const sellerLogout = async (req, res) => {
+  try {
+    res.clearCookie('sellerToken', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+    });
+    return res.json({ success: true, message: "Déconnecté" });
+  } catch (error) {
+    console.log(error.message);
+    res.json({ success: false, message: error.message });
+  }
+};

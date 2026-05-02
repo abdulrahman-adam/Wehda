@@ -15,13 +15,11 @@ const Navbar = () => {
     setUser,
     setShowUserLogin,
     navigate,
-    // searchQuery = "",
     searchQuery,
     setSearchQuery,
     categories,
   } = useAppContext();
 
-  // Ferme le menu et la modal lors du changement d'URL
   useEffect(() => {
     setShowUserLogin(false);
     setOpen(false);
@@ -40,272 +38,217 @@ const Navbar = () => {
     }
   };
 
-  // console.log("Type de setSearchQuery:", typeof setSearchQuery);
-  // console.log("Valeur de searchQuery:", searchQuery);
   return (
-    <nav className="flex items-center justify-between px-4 md:px-10 lg:px-16 py-4 h-[55px] border-b border-gray-200 bg-gray sticky top-0 z-50 bg-gray-300">
-      {/* --- LOGO --- */}
-      <NavLink to="/" className="z-50">
-        <img
-          src="/logo.jpeg"
-          alt="logo"
-          className="w-28 md:w-32"
-          style={{ height: "50px", width: "50px" }}
-        />
-      </NavLink>
-
-      {/* --- DESKTOP NAVIGATION (Visible > sm) --- */}
-      <ul className="hidden sm:flex items-center gap-5 md:gap-8 font-medium text-gray-700">
-        <NavLink to="/" className="hover:text-indigo-600 transition-colors">
-          Accueil
-        </NavLink>
-        <NavLink
-          to="/products"
-          className="hover:text-indigo-600 transition-colors"
-        >
-          Produits
-        </NavLink>
-
-        {/* Select Catégories Desktop */}
-        <div className="relative group flex items-center">
-          <select
-            onChange={(e) => {
-              const selectedPath = e.target.value;
-              if (selectedPath) {
-                // Redirection vers le parent
-                navigate(`/products/${selectedPath}`);
-              } else {
-                navigate("/products");
-              }
-            }}
-            className="bg-transparent outline-none cursor-pointer hover:text-indigo-600 appearance-none pr-5 py-1"
-          >
-            <option value="">Catégories</option>
-            {/* ✅ CHANGE: Filter to show ONLY parents (parentId === null) */}
-            {categories
-              ?.filter((cat) => cat.parentId === null)
-              .map((cat, index) => (
-                <option key={index} value={cat.path}>
-                  {cat.text}
-                </option>
-              ))}
-          </select>
-          <i className="bi bi-chevron-down absolute right-0 text-[10px] text-gray-400 group-hover:text-indigo-600 pointer-events-none"></i>
-        </div>
-
-        <NavLink
-          to="/contact"
-          className="hover:text-indigo-600 transition-colors"
-        >
-          Contact
-        </NavLink>
-      </ul>
-
-      {/* --- ICONS & ACTIONS --- */}
-      <div className="flex items-center gap-4 md:gap-6">
-        {/* Barre de recherche (Cachée sur petit mobile, visible > lg) */}
-        <div className="hidden lg:flex items-center bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200">
-          {/* <input 
-            onChange={(e) => setSearchQuery(e.target.value)}
-            value={searchQuery}
-            type="text"
-            placeholder="Rechercher..."
-            className="bg-transparent outline-none text-sm w-32 xl:w-48"
-          /> */}
-
-          <input
-            type="text"
-            placeholder="Rechercher..."
-            // ✅ On s'assure que value n'est JAMAIS undefined
-            value={searchQuery || ""}
-            // ✅ On met à jour l'état ET on redirige si nécessaire
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              if (location.pathname !== "/products") {
-                navigate("/products");
-              }
-            }}
-            className="bg-transparent outline-none text-sm w-32 xl:w-48"
-          />
+    <>
+      {/* --- ELITE NAV BAR --- */}
+      <nav className="flex items-center justify-between px-4 md:px-10 lg:px-16 py-4 h-[65px] border-b border-white/10 sticky top-0 z-[60] bg-white/80 backdrop-blur-xl transition-all duration-500 shadow-sm">
+        
+        {/* --- LOGO: Scale-Up Effect --- */}
+        <NavLink to="/" className="z-50 transform hover:scale-110 active:scale-95 transition-all duration-300">
           <img
-            src={assets.search_icon}
-            alt="search"
-            className="w-4 h-4 opacity-60"
+            src={`${window.location.origin}/logo.png`}
+            alt="logo"
+            className="w-28 md:w-32 object-contain filter drop-shadow-sm"
+            style={{ height: "50px", width: "60px" }}
           />
-        </div>
+        </NavLink>
 
-        {/* Panier */}
-        <div
-          onClick={() => navigate("/cart")}
-          className="relative cursor-pointer"
-        >
-          <img
-            src={assets.nav_cart_icon}
-            alt="cart"
-            className="w-6 opacity-80"
-          />
-          <span className="absolute -top-2 -right-2 text-[10px] text-white bg-indigo-600 w-4 h-4 rounded-full flex items-center justify-center">
-            {getCartCount ? getCartCount() : 0}
-          </span>
-        </div>
-
-        {/* Profil / Login */}
-        <div className="hidden sm:block">
-          {!user ? (
-            <button
-              onClick={() => setShowUserLogin(true)}
-              className="px-6 py-2 bg-indigo-600 text-white rounded-full text-sm font-medium hover:bg-indigo-700 transition cursor-pointer"
-            >
-              Connexion
-            </button>
-          ) : (
-            <div className="relative group">
-              <img
-                src={assets.profile_icon}
-                alt="profile"
-                className="w-9 cursor-pointer"
-              />
-              <div className="hidden group-hover:block absolute right-0 top-full pt-2 w-40">
-                <ul className="bg-white shadow-xl border border-gray-100 rounded-xl py-2 text-sm">
-                  <li
-                    onClick={() => navigate("/my-orders")}
-                    className="px-4 py-2 hover:bg-indigo-50 cursor-pointer transition"
-                  >
-                    Mes Commandes
-                  </li>
-                  <li
-                    onClick={logout}
-                    className="px-4 py-2 hover:bg-red-50 text-red-500 cursor-pointer transition border-t border-gray-50 cursor-pointer"
-                  >
-                    Déconnexion
-                  </li>
-                </ul>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Bouton Menu Mobile */}
-        <button className="sm:hidden" onClick={() => setOpen(true)}>
-          <img src={assets.menu_icon} alt="menu" className="w-6" />
-        </button>
-      </div>
-
-      {/* --- MOBILE SIDEBAR MENU --- */}
-      <div
-        className={`fixed top-0 right-0 bottom-0 overflow-hidden bg-white transition-all z-[100] ${open ? "w-full" : "w-0"}`}
-      >
-        <div className="flex flex-col text-gray-600 h-full">
-          {/* Header Mobile Menu */}
-          <div className="flex items-center justify-between p-5 border-b">
-            {/* <img src={assets.logo} className="w-24" alt="logo" /> */}
+        {/* --- DESKTOP NAVIGATION: Premium Underlines --- */}
+        <ul className="hidden sm:flex items-center gap-8 font-bold text-gray-600">
+          {[
+            { name: "Accueil", path: "/" },
+            { name: "Produits", path: "/products" },
+            { name: "Contact", path: "/contact" }
+          ].map((item) => (
             <NavLink
-              to="/"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3 cursor-pointer"
+              key={item.name}
+              to={item.path}
+              className={({ isActive }) =>
+                `relative py-1 transition-all duration-300 hover:text-indigo-600 ${
+                  isActive ? "text-indigo-600" : ""
+                } group`
+              }
             >
-              <img
-                src="/logo.jpeg"
-                alt="logo"
-                className="w-28 md:w-32 cursor-pointer"
-                style={{ height: "50px", width: "50px" }}
-              />
+              {item.name}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-500 group-hover:w-full"></span>
             </NavLink>
+          ))}
 
-            <button
-              onClick={() => setOpen(false)}
-              className="text-2xl cursor-pointer hover:text-red-500 transition"
+          {/* Catégories Desktop: Modern Dropdown Style */}
+          <div className="relative group flex items-center">
+            <select
+              onChange={(e) => {
+                const selectedPath = e.target.value;
+                selectedPath ? navigate(`/products/${selectedPath}`) : navigate("/products");
+              }}
+              className="bg-transparent outline-none cursor-pointer font-bold group-hover:text-indigo-600 appearance-none pr-5 py-1 z-10 transition-colors"
             >
-              <i className="bi bi-x-lg"></i>
-            </button>
+              <option value="">Catégories</option>
+              {categories
+                ?.filter((cat) => cat.parentId === null)
+                .map((cat, index) => (
+                  <option key={index} value={cat.path}>{cat.text}</option>
+                ))}
+            </select>
+            <i className="bi bi-chevron-down absolute right-0 text-[10px] text-gray-400 group-hover:text-indigo-600 transition-transform duration-500 group-hover:rotate-180"></i>
+          </div>
+        </ul>
+
+        {/* --- ACTIONS: Iconic Polish --- */}
+        <div className="flex items-center gap-4 md:gap-6">
+          
+          {/* Search Bar: Expanding & Glow effect */}
+          <div className="hidden lg:flex items-center bg-gray-100/50 px-4 py-2 rounded-2xl border border-transparent focus-within:border-indigo-400 focus-within:bg-white focus-within:shadow-lg focus-within:shadow-indigo-100 transition-all duration-500 group">
+            <input
+              type="text"
+              placeholder="Rechercher..."
+              value={searchQuery || ""}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                if (location.pathname !== "/products") navigate("/products");
+              }}
+              className="bg-transparent outline-none text-sm w-32 xl:w-48 placeholder:text-gray-400"
+            />
+            <img src={assets.search_icon} alt="search" className="w-4 h-4 opacity-40 group-focus-within:opacity-100 transition-opacity" />
           </div>
 
-          {/* Links Mobile Menu */}
-          <div className="flex flex-col p-6 gap-6 text-lg font-medium">
-            <NavLink
-              to="/"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3"
-            >
-              <i className="bi bi-house"></i> Accueil
-            </NavLink>
-            <NavLink
-              to="/products"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3"
-            >
-              <i className="bi bi-box"></i> Produits
-            </NavLink>
+          {/* Cart Icon: Floating Badge miracle */}
+          <div
+            onClick={() => navigate("/cart")}
+            className="relative cursor-pointer group p-2 hover:bg-indigo-50 rounded-full transition-all duration-300 active:scale-75"
+          >
+            <img src={assets.nav_cart_icon} alt="cart" className="w-6 opacity-80 group-hover:scale-110 group-hover:rotate-6 transition-transform" />
+            <span className="absolute -top-0.5 -right-0.5 text-[10px] font-bold text-white bg-red-500 w-4 h-4 rounded-full flex items-center justify-center shadow-lg shadow-red-200 animate-bounce">
+              {getCartCount ? getCartCount() : 0}
+            </span>
+          </div>
 
-            {/* Mobile Categories Select */}
-            <div className="flex flex-col gap-2">
-              <p className="text-sm text-gray-400 uppercase">Catégories</p>
-              <select
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value) {
-                    navigate(`/products/${value}`);
-                  } else {
-                    navigate("/products");
-                  }
-                  setOpen(false);
-                }}
-                className="p-3 bg-gray-50 rounded-xl outline-none border border-gray-100"
-              >
-                <option value="">Toutes les catégories</option>
-                {/* ✅ CHANGE: Filter to show ONLY parents (parentId === null) */}
-                {categories
-                  ?.filter((cat) => cat.parentId === null)
-                  .map((cat, index) => (
-                    <option key={index} value={cat.path}>
-                      {cat.text}
-                    </option>
-                  ))}
-              </select>
-            </div>
-
-            <NavLink
-              to="/contact"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-3"
-            >
-              <i className="bi bi-envelope"></i> Contact
-            </NavLink>
-
-            <hr className="my-2" />
-
+          {/* Profile: Professional Pop-over */}
+          <div className="hidden sm:block">
             {!user ? (
               <button
-                onClick={() => {
-                  setShowUserLogin(true);
-                  setOpen(false);
-                }}
-                className="w-full py-3 bg-indigo-600 text-white rounded-xl cursor-pointer"
+                onClick={() => setShowUserLogin(true)}
+                className="px-6 py-2.5 bg-indigo-600 text-white rounded-xl text-sm font-black shadow-xl shadow-indigo-100 hover:bg-indigo-700 hover:-translate-y-1 active:scale-95 transition-all cursor-pointer"
               >
                 Connexion
               </button>
             ) : (
-              <>
-                <NavLink
-                  to="/my-orders"
-                  onClick={() => setOpen(false)}
-                  className="flex items-center gap-3 font-normal"
-                >
-                  <i className="bi bi-bag-check"></i> Mes Commandes
-                </NavLink>
-                <button
-                  onClick={logout}
-                  className="text-left text-red-500 flex items-center gap-3 font-normal"
-                >
-                  <i className="bi bi-box-arrow-right cursor-pointer"></i>{" "}
-                  Déconnexion
-                </button>
-              </>
+              <div className="relative group">
+                <div className="w-10 h-10 rounded-full border-2 border-indigo-50 p-0.5 cursor-pointer group-hover:border-indigo-500 group-hover:shadow-lg transition-all duration-500">
+                    <img src={assets.profile_icon} alt="profile" className="w-full h-full object-cover rounded-full" />
+                </div>
+                <div className="invisible group-hover:visible absolute right-0 top-full pt-3 w-48 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-4 group-hover:translate-y-0">
+                  <ul className="bg-white/90 backdrop-blur-lg shadow-2xl border border-gray-100 rounded-2xl py-3 text-sm overflow-hidden">
+                    <li onClick={() => navigate("/my-orders")} className="px-5 py-2.5 hover:bg-indigo-600 hover:text-white cursor-pointer flex items-center gap-3 transition-colors">
+                      <i className="bi bi-bag-heart"></i> Mes Commandes
+                    </li>
+                    <li onClick={logout} className="px-5 py-2.5 hover:bg-red-50 text-red-500 cursor-pointer flex items-center gap-3 transition-colors border-t border-gray-50 mt-1">
+                      <i className="bi bi-box-arrow-right"></i> Déconnexion
+                    </li>
+                  </ul>
+                </div>
+              </div>
             )}
+          </div>
+
+          {/* Hamburger: Miracle Animated Icon */}
+          <button 
+            className="sm:hidden p-2 rounded-xl bg-gray-50 hover:bg-indigo-50 text-indigo-600 transition-all active:scale-90" 
+            onClick={() => setOpen(true)}
+          >
+            <i className="bi bi-grid-fill text-xl"></i>
+          </button>
+        </div>
+      </nav>
+
+      {/* --- MIRACLE MOBILE SIDEBAR: Apple-style sheet --- */}
+      <div className={`fixed inset-0 z-[100] transition-all duration-700 ${open ? "visible" : "invisible"}`}>
+        <div 
+          className={`absolute inset-0 bg-gray-900/40 backdrop-blur-md transition-opacity duration-700 ${open ? "opacity-100" : "opacity-0"}`} 
+          onClick={() => setOpen(false)}
+        ></div>
+        
+        <div className={`absolute top-0 right-0 bottom-0 bg-white w-[85%] max-w-sm shadow-[0_0_50px_rgba(0,0,0,0.2)] transition-transform duration-700 cubic-bezier(0.4, 0, 0.2, 1) flex flex-col ${open ? "translate-x-0" : "translate-x-full"}`}>
+          
+          <div className="flex items-center justify-between p-6 border-b border-gray-50">
+            <img src={`${window.location.origin}/logo.png`} alt="logo" className="w-14" />
+            <button onClick={() => setOpen(false)} className="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center hover:rotate-90 transition-all duration-500">
+              <i className="bi bi-x-lg text-lg"></i>
+            </button>
+          </div>
+
+          <div className="flex flex-col p-8 gap-8 overflow-y-auto">
+            {[
+                { to: "/", icon: "house-door-fill", label: "Accueil" },
+                { to: "/products", icon: "box-fill", label: "Produits" },
+                { to: "/contact", icon: "envelope-paper-fill", label: "Contact" }
+            ].map((link, i) => (
+                <NavLink 
+                    key={i} 
+                    to={link.to} 
+                    onClick={() => setOpen(false)}
+                    className="flex items-center gap-5 text-2xl font-black text-gray-800 hover:text-indigo-600 transition-all animate-miracleIn"
+                    style={{ animationDelay: `${i * 100}ms` }}
+                >
+                    <div className="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-indigo-600 shadow-inner">
+                        <i className={`bi bi-${link.icon}`}></i>
+                    </div>
+                    {link.label}
+                </NavLink>
+            ))}
+
+            <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent my-2"></div>
+
+            <div className="flex flex-col gap-4 animate-miracleIn" style={{ animationDelay: '350ms' }}>
+              <p className="text-[11px] text-gray-400 uppercase font-black tracking-[3px] ml-2">Explorer la collection</p>
+              <select
+                onChange={(e) => {
+                  const value = e.target.value;
+                  value ? navigate(`/products/${value}`) : navigate("/products");
+                  setOpen(false);
+                }}
+                className="p-4 bg-gray-100 rounded-2xl outline-none border-2 border-transparent focus:border-indigo-500 font-bold text-gray-700 transition-all"
+              >
+                <option value="">Toutes les catégories</option>
+                {categories?.filter((cat) => cat.parentId === null).map((cat, index) => (
+                  <option key={index} value={cat.path}>{cat.text}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mt-auto pt-10 flex flex-col gap-4 animate-miracleIn" style={{ animationDelay: '450ms' }}>
+              {!user ? (
+                <button
+                  onClick={() => { setShowUserLogin(true); setOpen(false); }}
+                  className="w-full py-5 bg-indigo-600 text-white rounded-2xl font-black text-lg shadow-2xl shadow-indigo-200 active:scale-95 transition-all"
+                >
+                  Démarrer l'aventure
+                </button>
+              ) : (
+                <>
+                  <NavLink to="/my-orders" onClick={() => setOpen(false)} className="flex items-center gap-4 p-5 rounded-2xl bg-indigo-50 text-indigo-700 font-black">
+                    <i className="bi bi-stars"></i> Mes Commandes
+                  </NavLink>
+                  <button onClick={logout} className="flex items-center gap-4 p-5 rounded-2xl bg-red-50 text-red-500 font-black transition-all active:bg-red-500 active:text-white">
+                    <i className="bi bi-power"></i> Déconnexion
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </nav>
+
+      <style jsx="true">{`
+        @keyframes miracleIn {
+          from { opacity: 0; transform: translateY(20px) scale(0.9); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .animate-miracleIn {
+          animation: miracleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+      `}</style>
+    </>
   );
 };
 

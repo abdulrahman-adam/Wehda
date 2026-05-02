@@ -45,8 +45,10 @@ app.post(
 
 // Add all versions of your domain here
 const allowedOrigins = [
-  'https://munidm.fr',
-  'https://www.munidm.fr',
+  'https://oumabarar.com',
+  'https://www.oumabarar.com',
+  'https://api.oumabarar.com', // Add this!
+  'https://db.oumabarar.com',   // Add this!
   'http://localhost:5173',
   'http://localhost:5174',
   'http://109.176.199.234:5173'
@@ -70,6 +72,8 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Handle pre-flight for mobile
+
 // 3. INFRASTRUCTURE (Cookies must be parsed before auth middleware runs)
 app.use(cookieParser());
 app.use(express.json({ limit: '100mb' }));

@@ -32,6 +32,9 @@ const ProductCard = ({ product }) => {
 
     const variantKey = `${selectedVariants.join("-")}-${selectedColors.join("-")}`;
     addToCart(product.id, variantKey);
+
+    // Added success message
+    toast.success("Produit ajouté au panier !");
   };
 
   if (!product) return null;

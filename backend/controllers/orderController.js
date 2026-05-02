@@ -8,95 +8,6 @@ import Stripe from "stripe";
 import { Op } from "sequelize";
 import Category from "../models/Category.js";
 
-// --- PRIVATE HELPER: Attaches live Product, User, & Address info ---
-// const fetchOrderDetails = async (order) => {
-//     const orderData = order.get({ plain: true });
-
-//     // 1. Fetch User Info
-//     const user = await User.findByPk(orderData.userId, { 
-//         attributes: ["name", "email"]
-//     });
-
-//     // 2. NEW: Fetch Full Address Object (Fixes the "Empty Name/Address" issue)
-//     let addressInfo = null;
-//     if (orderData.address) {
-//         // If address is an ID (Number), fetch the object. If it's already an object, use it.
-//         if (typeof orderData.address === 'number' || !isNaN(orderData.address)) {
-//             addressInfo = await Address.findByPk(orderData.address);
-//         } else {
-//             addressInfo = orderData.address;
-//         }
-//     }
-
-//     // 3. Fetch Live Product Details for each item
-//     const itemsWithDetails = await Promise.all(
-//         orderData.items.map(async (item) => {
-//             const productInfo = await Products.findByPk(item.product);
-//             return {
-//                 ...item,
-//                 product: productInfo ? productInfo.get({ plain: true }) : null,
-//             };
-//         })
-//     );
-
-//     return { 
-//         ...orderData, 
-//         user, 
-//         address: addressInfo, // Returns the full object now, not just an ID
-//         items: itemsWithDetails 
-//     };
-// };
-
-// const fetchOrderDetails = async (order) => {
-//     const orderData = order.get({ plain: true });
-
-//     // 1. Fetch User Info
-//     const user = await User.findByPk(orderData.userId, { 
-//         attributes: ["name", "email"]
-//     });
-
-//     // 2. Fetch Full Address Object
-//     let addressInfo = null;
-//     if (orderData.address) {
-//         if (typeof orderData.address === 'number' || !isNaN(orderData.address)) {
-//             addressInfo = await Address.findByPk(orderData.address);
-//         } else {
-//             addressInfo = orderData.address;
-//         }
-//     }
-
-//     // 3. Fetch Live Product Details (Updated to get Category manually)
-//     const itemsWithDetails = await Promise.all(
-//         orderData.items.map(async (item) => {
-//             // Get the product
-//             const productInfo = await Products.findByPk(item.product);
-            
-//             let productPlain = null;
-//             if (productInfo) {
-//                 productPlain = productInfo.get({ plain: true });
-                
-//                 // --- ADDED ONLY THIS: Manual Category Fetch ---
-//                 if (productPlain.categId) {
-//                     const category = await Category.findByPk(productPlain.categId);
-//                     productPlain.categ = category ? category.get({ plain: true }) : null;
-//                 }
-//                 // -----------------------------------------------
-//             }
-
-//             return {
-//                 ...item,
-//                 product: productPlain,
-//             };
-//         })
-//     );
-
-//     return { 
-//         ...orderData, 
-//         user, 
-//         address: addressInfo, 
-//         items: itemsWithDetails 
-//     };
-// };
 
 const fetchOrderDetails = async (order) => {
     try {
@@ -313,26 +224,6 @@ export const placeOrderStripe = async (req, res) => {
 };
 
 
-// --- 6. Stripe Webhook ---
-// export const stripeWebhooks = async (request, response) => {
-//     const stripeInstance = new Stripe(process.env.STRIPE_SECRET_KEY);
-//     const sig = request.headers["stripe-signature"];
-//     let event;
-
-//     try {
-//         event = stripeInstance.webhooks.constructEvent(request.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-//     } catch (error) {
-//         return response.status(400).send(`Webhook Error: ${error.message}`);
-//     }
-
-//     if (event.type === "checkout.session.completed") {
-//         const { orderId, userId } = event.data.object.metadata;
-//         await Order.update({ isPaid: true, status: "Order Placed" }, { where: { id: orderId } });
-//         await User.update({ cartItems: "{}" }, { where: { id: userId } });
-//     }
-//     response.json({ received: true });
-//     console.log("🔥 Webhook received:", event.type);
-// };
 
 
 export const stripeWebhooks = async (request, response) => {
