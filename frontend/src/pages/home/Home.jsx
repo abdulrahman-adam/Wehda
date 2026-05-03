@@ -5,8 +5,6 @@ import CategoryHeroSlider from '../../components/categoryHeroSlider/CategoryHero
 import ShopStatus from '../../components/shopStatus/ShopStatus'
 import Hero from '../../components/hero/Hero'
 
-// import Slider from '../../components/slider/Slider'
-// import Hero from '../../components/hero/Hero'
 
 
 const Home = () => {

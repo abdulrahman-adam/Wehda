@@ -29,33 +29,53 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-br from-gray-950 via-black to-gray-950 border-t border-gray-800/50 shadow-2xl text-gray-200 overflow-hidden">
-      {/* Top Animated Glow Line */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-indigo-500/80 to-transparent shadow-[0_0_15px_rgba(99,102,241,0.5)]"></div>
+    <footer className="relative bg-[#02040a] border-t border-indigo-500/10 text-gray-200 overflow-hidden">
+      {/* Effets de lumière en arrière-plan */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 blur-[120px] rounded-full -mr-64 -mb-64"></div>
+        <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-blue-600/5 blur-[100px] rounded-full -ml-32 -mt-32"></div>
+      </div>
+
+      {/* Ligne lumineuse supérieure */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px bg-gradient-to-r from-transparent via-indigo-500/50 to-transparent"></div>
 
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-8 lg:px-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-16">
           
-          {/* BRAND COLUMN */}
+          {/* COLONNE MARQUE & SLOGAN */}
           <div className="col-span-1 flex flex-col items-center lg:items-start text-center lg:text-left animate-fadeIn">
             <div className="group cursor-default relative">
-              <h2 className="text-3xl font-black tracking-tighter text-indigo-500 transition-all duration-700 group-hover:text-indigo-400 group-hover:drop-shadow-[0_0_10px_rgba(99,102,241,0.6)]">
-                OUMABARAR
+              <h2 className="text-3xl font-black tracking-tighter text-white transition-all duration-700 group-hover:text-indigo-400">
+                <a href="/">WEHDA</a>
               </h2>
-              <div className="h-0.5 w-0 bg-indigo-500 transition-all duration-500 group-hover:w-full mt-1 shadow-[0_0_8px_rgba(99,102,241,1)]"></div>
+              <div className="h-0.5 w-8 bg-indigo-500 transition-all duration-500 group-hover:w-full mt-1"></div>
             </div>
             
-            <p className="mt-6 text-gray-400 text-sm leading-relaxed max-w-xs transition-colors hover:text-gray-300">
-              Plateforme e-commerce moderne, rapide et sécurisée.
+            <p className="mt-6 text-gray-400 text-sm leading-relaxed max-w-xs font-medium">
+              Plateforme e-commerce moderne, rapide et sécurisée. Redéfinissez votre expérience shopping.
             </p>
 
-            {/* SOCIAL ICONS WITH SPRING HOVER */}
+            <p className="mt-4 text-gray-500 text-xs italic">
+              Découvrez une sélection exclusive de produits livrés chez vous en un clin d'œil.
+            </p>
+            
+            {/* BADGE MICRO-ENTREPRISE & LOCALISATION */}
+            <div className="mt-6 flex flex-wrap gap-2 justify-center lg:justify-start">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                Micro-entreprise
+              </span>
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white/5 text-gray-300 border border-white/10">
+                <i className="bi bi-geo-alt-fill mr-1 text-indigo-500"></i> <a href="https://www.google.com/maps/place/64+Rue+Louis+Blanc,+75010+Paris/@48.8838015,2.3579371,17z/data=!4m6!3m5!1s0x47e66e70546f1479:0xcb1341dae1e0e515!8m2!3d48.883798!4d2.360512!16s%2Fg%2F11pw1y3h47?entry=ttu&g_ep=EgoyMDI2MDQyOS4wIKXMDSoASAFQAw%3D%3D">Basé à Paris 10</a>
+              </span>
+            </div>
+
+            {/* RÉSEAUX SOCIAUX */}
             <div className="flex gap-4 mt-8">
               {["facebook", "instagram", "twitter-x"].map((icon) => (
                 <a
                   key={icon}
                   href={`https://${icon}.com`}
-                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-gray-900/50 border border-gray-800 text-gray-400 hover:border-indigo-500 hover:text-indigo-400 hover:-translate-y-1.5 transition-all duration-300 ease-out hover:shadow-[0_8px_20px_-8px_rgba(99,102,241,0.6)]"
+                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:border-indigo-500 hover:text-indigo-400 transition-all duration-300 hover:-translate-y-1"
                 >
                   <i className={`bi bi-${icon} text-lg`}></i>
                 </a>
@@ -63,27 +83,19 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* LINKS: Forced 3-column row on mobile with staggered animations */}
+          {/* LIENS DE NAVIGATION */}
           <div className="col-span-1 lg:col-span-3 grid grid-cols-3 gap-3 sm:gap-10">
             {footerSections.map((section, index) => (
-              <div 
-                key={index} 
-                className="flex flex-col items-start text-left animate-slideUp"
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
-                <h3 className="group flex items-center text-[10px] sm:text-xs font-black uppercase tracking-widest text-indigo-400/90 mb-6">
-                  <span className="h-4 w-0.5 bg-indigo-500 mr-2 rounded-full transition-all duration-300 group-hover:h-6 group-hover:shadow-[0_0_8px_rgba(99,102,241,1)]"></span>
+              <div key={index} className="flex flex-col items-start text-left animate-slideUp" style={{ animationDelay: `${index * 150}ms` }}>
+                <h3 className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-white mb-6 flex items-center">
+                  <span className="h-4 w-0.5 bg-indigo-500 mr-2 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.5)]"></span>
                   {section.title}
                 </h3>
                 <ul className="space-y-4">
                   {section.links.map((link, i) => (
-                    <li key={i} className="relative group">
-                      <a
-                        href={link.href}
-                        className="inline-block text-gray-400 text-[11px] sm:text-sm hover:text-white transition-all duration-300 transform group-hover:translate-x-1"
-                      >
+                    <li key={i}>
+                      <a href={link.href} className="text-gray-400 text-[11px] sm:text-sm hover:text-white transition-all duration-300">
                         {link.name}
-                        <span className="absolute -bottom-1 left-0 w-0 h-px bg-gradient-to-r from-indigo-500 to-transparent transition-all duration-300 group-hover:w-full"></span>
                       </a>
                     </li>
                   ))}
@@ -93,33 +105,26 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* BOTTOM BAR WITH GLASS EFFECT */}
-        <div className="mt-16 pt-8 border-t border-gray-800/50 flex flex-col items-center gap-6">
-          <div className="bg-gray-900/30 backdrop-blur-md px-8 py-3 rounded-full border border-gray-800/50 hover:border-indigo-500/30 transition-colors duration-500 group">
+        {/* BARRE INFÉRIEURE - LÉGALITÉ */}
+        <div className="mt-16 pt-8 border-t border-white/5 flex flex-col items-center text-center">
+          <div className="bg-white/[0.02] backdrop-blur-md px-6 py-4 rounded-2xl border border-white/5">
             <p className="text-gray-500 text-[10px] sm:text-[11px] tracking-wide uppercase">
-              © {new Date().getFullYear()} <span className="font-black text-indigo-500 group-hover:text-indigo-400 transition-colors">OUMABARAR</span>. 
-              <span className="ml-1 opacity-50 group-hover:opacity-100 transition-opacity">Tous droits réservés.</span>
+              © {new Date().getFullYear()} <span className="font-black text-indigo-400"><a href="/">WEHDA</a></span>. 
+              Fait avec ❤️ à Paris 10e.
+            </p>
+            <p className="text-[9px] text-gray-600 mt-2 italic max-w-xl mx-auto">
+              
+              Toutes les transactions sont sécurisées et cryptées.
             </p>
           </div>
         </div>
       </div>
 
       <style jsx="true">{`
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes slideUp {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
-        .animate-slideUp {
-          opacity: 0;
-          animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fadeIn { animation: fadeIn 0.8s ease forwards; }
+        .animate-slideUp { opacity: 0; animation: slideUp 0.6s ease forwards; }
       `}</style>
     </footer>
   );
