@@ -18,6 +18,7 @@ const AdminLayout = () => {
     { name: "Add Category", path: "/admin/add-category", icon: assets.add_icon },
     { name: "Category List", path: "/admin/category-list", icon: assets.product_list_icon },
     { name: "Contact List", path: "/admin/all-contact", icon: assets.product_list_icon },
+    { name: "Hours List", path: "/admin/hours", icon: assets.coin_icon },
   ];
 
   // --- 1. THE REFRESH PROTECTION ---
@@ -31,22 +32,6 @@ const AdminLayout = () => {
   if (isSeller === false) {
     return <Navigate to="/admin" />;
   }
-
-  // const logout = async () => {
-  //   try {
-  //     const { data } = await axios.get("/api/seller/logout");
-  //     if (data.success) {
-  //       setIsSeller(false);
-  //       setUserData(null);
-  //       if (setUser) setUser(null);
-  //       toast.success(data.message);
-  //       navigate("/");
-  //     }
-  //   } catch (error) {
-  //     toast.error(error?.response?.data?.message || error.message);
-  //   }
-  // };
-
 
   const logout = async () => {
   try {

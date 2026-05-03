@@ -2,6 +2,7 @@ import React from 'react'
 import CategoryDrillDown from '../../components/categoryDrillDown/CategoryDrillDown'
 import LatestFeatured from '../../components/latestFeatured/LatestFeatured'
 import CategoryHeroSlider from '../../components/categoryHeroSlider/CategoryHeroSlider'
+import ShopStatus from '../../components/shopStatus/ShopStatus'
 
 // import Slider from '../../components/slider/Slider'
 // import Hero from '../../components/hero/Hero'
@@ -10,7 +11,7 @@ import CategoryHeroSlider from '../../components/categoryHeroSlider/CategoryHero
 const Home = () => {
   return (
     <div>
-      {/* <Hero /> */}
+      <ShopStatus />
       <CategoryDrillDown />
       <CategoryHeroSlider />
       {/* <Slider /> */}

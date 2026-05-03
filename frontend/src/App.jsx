@@ -37,6 +37,7 @@ import FAQ from "./pages/faq/FAQ";
 import Shipping from "./pages/Shipping/Shipping";
 import Promotions from "./pages/promotions/Promotions";
 import NewArrivals from "./pages/newArrivals/NewArrivals";
+import AdminHours from "./pages/admin/AdminHours";
 
 
 const App = () => {
@@ -159,6 +160,7 @@ const App = () => {
           <Route path="add-category" element={<AddCategory />} />
           <Route path="all-contact" element={<ContactList />} />
           <Route path="orders" element={<Orders />} />
+          <Route path="hours" element={<AdminHours />} />
         </Route>
 
         {/* FALLBACK */}

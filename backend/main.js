@@ -16,7 +16,8 @@ import orderRouter from "./routes/orderRoute.js";
 import categoryRouter from "./routes/categoryRoute.js";
 import contactRouter from "./routes/contactRoute.js";
 import { stripeWebhooks } from "./controllers/orderController.js";
-
+import hourRouter from "./routes/hourRoute.js";
+import Hour from "./models/Hour.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -79,6 +80,30 @@ app.use(cookieParser());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
+// Oening Hours
+// --- UPDATED SECTION IN main.js ---
+try {
+    await sequelize.sync({ alter: true });
+    console.log("✅ MySQL Tables Synchronized");
+
+    
+    // Check if table is empty and seed it automatically
+    const count = await Hour.count();
+    if (count === 0) {
+        const days = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+        const batch = days.map(day => ({
+            day_of_week: day,
+            open_time: '10:00:00',
+            close_time: '22:00:00',
+            is_closed: false
+        }));
+        await Hour.bulkCreate(batch);
+        console.log("✨ Miracle! Opening hours auto-initialized.");
+    }
+} catch (error) {
+    console.error("❌ MySQL Sync/Seed Error:", error);
+}
+
 // 4. API ROUTES
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
@@ -88,6 +113,7 @@ app.use('/api/cart', cartRouter);
 app.use('/api/address', addressRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/contact', contactRouter);
+app.use('/api/hours', hourRouter);
 
 app.get('/', (req, res) => res.send("API IS WORKING NOW"));
 
