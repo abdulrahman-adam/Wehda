@@ -19,6 +19,13 @@ const ShopStatus = () => {
         }
     };
 
+    // Sort schedule to put today at the top
+    const sortedSchedule = [...schedule].sort((a, b) => {
+        if (a.day_of_week === today?.day_of_week) return -1;
+        if (b.day_of_week === today?.day_of_week) return 1;
+        return 0;
+    });
+
     return (
         <div className="w-full max-w-6xl mx-auto px-4 py-10">
             <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 flex flex-col lg:flex-row transition-all duration-500 hover:shadow-blue-500/10">
@@ -61,7 +68,7 @@ const ShopStatus = () => {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-3 md:gap-4">
-                        {schedule.map((item) => {
+                        {sortedSchedule.map((item) => {
                             const isToday = item.day_of_week === today?.day_of_week;
                             
                             return (

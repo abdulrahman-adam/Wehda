@@ -49,7 +49,7 @@ const Navbar = () => {
             src={`${window.location.origin}/logo.png`}
             alt="logo"
             className="w-28 md:w-32 object-contain filter drop-shadow-sm"
-            style={{ height: "50px", width: "60px" }}
+            style={{ height: "60px", width: "70px" }}
           />
         </NavLink>
 

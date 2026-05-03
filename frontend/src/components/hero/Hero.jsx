@@ -1,72 +1,88 @@
-import React from 'react';
-import { Phone, MapPin, ArrowRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { Phone, MapPin, Clock, X } from 'lucide-react'; 
+import ShopStatus from '../shopStatus/ShopStatus';
 
 const Hero = () => {
-  const phoneNumber = "0987654321";
-  const mapLocation = "https://www.google.com/maps/dir//Paris+France";
+  const [showStatus, setShowStatus] = useState(false);
+
+  // High-performance miracle class:
+  // animate-miracle-zoom: Handles the constant breathing effect
+  const iconBaseClass = "flex items-center justify-center aspect-square rounded-full border shadow-lg transition-all duration-500 active:scale-75 hover:rotate-12 animate-miracle-zoom";
 
   return (
-    <section className="relative w-full bg-white py-20 px-6 overflow-hidden">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <div className="md:hidden flex items-center justify-center w-full p-4">
+      {/* High-Performance GPU Accelerated Animations */}
+      <style>{`
+        @keyframes miracle-zoom {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.15); opacity: 0.9; }
+        }
+        .animate-miracle-zoom {
+          animation: miracle-zoom 3s ease-in-out infinite;
+          will-change: transform; /* Signals browser to use GPU */
+        }
+        .delay-v1 { animation-delay: 0.5s; }
+        .delay-v2 { animation-delay: 1s; }
+      `}</style>
+
+      <div className="flex flex-col gap-8 w-full">
+        
+        {/* Icon Bar */}
+        <div className="grid grid-cols-3 gap-6 place-items-center">
           
-          {/* COLONNE GAUCHE : TEXTE & TEL */}
-          <div className="flex flex-col space-y-8">
-            <div>
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-4 block">
-                Contact Rapide
-              </span>
-              <h1 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter text-gray-900 leading-none">
-                Explorer les <br />
-                <span className="text-blue-600 not-italic">Collections</span>
-              </h1>
-            </div>
+          {/* Maps Icon */}
+          <a 
+            href="https://www.google.com/maps/place/64+Rue+Louis+Blanc,+75010+Paris/..." 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={`${iconBaseClass} w-10 bg-white border-gray-100`}
+          >
+            <MapPin size={26} className="text-blue-600" />
+          </a>
 
-            <a 
-              href={`tel:${phoneNumber}`}
-              className="group flex items-center gap-6 p-6 rounded-[30px] bg-blue-50 border-2 border-transparent hover:border-blue-600 transition-all w-full max-w-sm shadow-sm"
-            >
-              <div className="w-14 h-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                <Phone size={28} fill="currentColor" />
-              </div>
-              <div>
-                <p className="text-[10px] font-black uppercase text-blue-400 tracking-widest">Appelez-nous</p>
-                <p className="text-xl font-black text-gray-900">{phoneNumber}</p>
-              </div>
-            </a>
-          </div>
+          {/* Status Toggle Icon (Center Focus) */}
+          <button 
+            onClick={() => setShowStatus(!showStatus)}
+            className={`${iconBaseClass} w-10 delay-v1 ${
+              showStatus 
+                ? 'bg-red-500 border-gray-900 scale-125' 
+                : 'bg-white border-gray-100'
+            }`}
+          >
+            {showStatus ? (
+              <X size={26} className="text-white" />
+            ) : (
+              <Clock size={26} className="text-purple-600" />
+            )}
+          </button>
 
-          {/* COLONNE DROITE : MAPS & IFRAME */}
-          <div className="flex flex-col space-y-8">
-            <div className="relative group overflow-hidden rounded-[40px] bg-gray-100 border-2 border-gray-100 shadow-2xl aspect-video lg:aspect-square max-h-[400px]">
-              {/* IFRAME MAPS */}
-              <iframe
-                title="Location Map"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916256937595!2d2.29229261567366!3d48.85837007928746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca979a741c901!2sTour+Eiffel!5e0!3m2!1sfr!2sfr!4v1565104863334!5m2!1sfr!2sfr"
-                className="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-700"
-                allowFullScreen=""
-                loading="lazy"
-              ></iframe>
-
-              {/* OVERLAY MAPS CLICKABLE */}
-              <a 
-                href={mapLocation}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="absolute bottom-6 right-6 bg-blue-600 text-white p-4 rounded-2xl shadow-xl flex items-center gap-3 hover:bg-blue-700 transition-colors active:scale-95"
-              >
-                <MapPin size={24} />
-                <span className="font-black uppercase text-[10px] tracking-widest">Ouvrir Maps</span>
-              </a>
-            </div>
-          </div>
-
+          {/* Telephone Icon */}
+          <a 
+            href="tel:0766422095" 
+            className={`${iconBaseClass} w-10 bg-white border-gray-100 delay-v2`}
+          >
+            <Phone size={26} className="text-green-600"/>
+          </a>
         </div>
+
+        {/* Status Component Display */}
+        {showStatus && (
+          <div className="animate-in fade-in zoom-in slide-in-from-bottom-8 duration-700 ease-out">
+            <div className="relative bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.2)] overflow-hidden border border-blue-50">
+              <div className="absolute top-4 right-4 z-10">
+                <button 
+                  onClick={() => setShowStatus(false)} 
+                  className="p-2 bg-gray-100 rounded-full active:bg-red-500 active:text-white transition-all"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+              <ShopStatus />
+            </div>
+          </div>
+        )}
       </div>
-      
-      {/* DECORATION BACKGROUND */}
-      <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[500px] h-[500px] bg-blue-50 rounded-full blur-3xl opacity-50 -z-10" />
-    </section>
+    </div>
   );
 };
 
