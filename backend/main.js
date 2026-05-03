@@ -46,10 +46,10 @@ app.post(
 
 // Add all versions of your domain here
 const allowedOrigins = [
-  'https://oumabarar.com',
-  'https://www.oumabarar.com',
-  'https://api.oumabarar.com', // Add this!
-  'https://db.oumabarar.com',   // Add this!
+  'https://wehda.fr',
+  'https://www.wehda.fr',
+  'https://api.wehda.fr', // Add this!
+  'https://db.wehda.fr',   // Add this!
   'http://localhost:5173',
   'http://localhost:5174',
   'http://109.176.199.234:5173'
