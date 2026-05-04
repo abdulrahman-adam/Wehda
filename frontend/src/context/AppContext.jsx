@@ -35,7 +35,8 @@ const [user, setUser] = useState(undefined);
   const [shopStatus, setShopStatus] = useState({ 
     status: "CHARGEMENT...", 
     schedule: [], 
-    today: null 
+    today: null,
+    message: ""
   });
 
   // --- AUTH & PROFILES ---
@@ -289,15 +290,74 @@ const fetchUser = async () => {
 
 
   // --- Fetch Opening Hours & Status ---
-  const fetchShopStatus = async () => {
-    try {
-      const { data } = await axios.get("/api/hours/status");
-      // This will contain: { status, today, schedule }
-      setShopStatus(data);
-    } catch (error) {
-      console.error("Error fetching shop status:", error);
+  // const fetchShopStatus = async () => {
+  //   try {
+  //     const { data } = await axios.get("/api/hours/status");
+  //     // This will contain: { status, today, schedule }
+  //     setShopStatus(data);
+  //   } catch (error) {
+  //     console.error("Error fetching shop status:", error);
+  //   }
+  // };
+
+
+// 2. Add this Helper Function inside AppContextProvider
+const calculateStatusLocally = (schedule) => {
+    // Force "Europe/Paris" time calculation
+    const now = new Date();
+    const parisTimeStr = now.toLocaleString("en-GB", { timeZone: "Europe/Paris" }); 
+    // Format: "DD/MM/YYYY, HH:mm:ss"
+    
+    const [datePart, timePart] = parisTimeStr.split(', ');
+    const [hours, minutes] = timePart.split(':').map(Number);
+    const currentTimeMinutes = hours * 60 + minutes;
+
+    // Get the current day in French to match your database (Lundi, Mardi...)
+    const dayName = new Intl.DateTimeFormat('fr-FR', { weekday: 'long', timeZone: 'Europe/Paris' }).format(now);
+    const currentDay = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+
+    const todayData = schedule.find(s => s.day_of_week === currentDay);
+
+    if (!todayData || todayData.is_closed) {
+        return { status: "FERMÉ", today: todayData, message: "Aujourd'hui est un jour de fermeture" };
     }
-  };
+
+    const [openH, openM] = todayData.open_time.split(':').map(Number);
+    const [closeH, closeM] = todayData.close_time.split(':').map(Number);
+    
+    const openTimeMinutes = openH * 60 + openM;
+    const closeTimeMinutes = closeH * 60 + closeM;
+
+    // Logic for Status
+    if (currentTimeMinutes >= openTimeMinutes && currentTimeMinutes < closeTimeMinutes) {
+        // Check if closing in less than 30 minutes
+        if (closeTimeMinutes - currentTimeMinutes <= 30) {
+            return { status: "FERMETURE PROCHE", today: todayData, message: `Ferme à ${todayData.close_time.slice(0,5)}` };
+        }
+        return { status: "OUVERT", today: todayData, message: "" };
+    } else if (currentTimeMinutes < openTimeMinutes) {
+        return { status: "FERMÉ", today: todayData, message: `Ouvre à ${todayData.open_time.slice(0,5).replace(':', 'h')}` };
+    } else {
+        return { status: "FERMÉ", today: todayData, message: "Fermé pour aujourd'hui" };
+    }
+};
+
+// 3. Update the fetchShopStatus function
+const fetchShopStatus = async () => {
+    try {
+        const { data } = await axios.get("/api/hours/status");
+        if (data.schedule) {
+            // Recalculate status based on Paris Timezone, not Server Timezone
+            const localStatus = calculateStatusLocally(data.schedule);
+            setShopStatus({
+                ...localStatus,
+                schedule: data.schedule
+            });
+        }
+    } catch (error) {
+        console.error("Error fetching shop status:", error);
+    }
+};
 
   // --- Update Opening Hours (Admin Only) ---
   const updateShopHours = async (day, updatedData) => {
