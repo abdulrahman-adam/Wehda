@@ -11,8 +11,8 @@ const Home = () => {
   return (
     <div>
       <Hero />
-      <CategoryDrillDown />
       <CategoryHeroSlider />
+      <CategoryDrillDown />
       {/* <Slider /> */}
       <LatestFeatured />
     </div>

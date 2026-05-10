@@ -44,11 +44,12 @@ const CategoryDrillDown = ({ onClose }) => {
         onClick={() => handleParentClick(cat)}
         className="flex flex-col items-center group space-y-3 outline-none flex-shrink-0 snap-center"
       >
-        <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-50 flex items-center justify-center border-2 border-indigo-50 group-hover:border-indigo-600 transition-all duration-300 overflow-hidden shadow-sm">
+        <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-full bg-gray-50 flex items-center justify-center border-2 border-indigo-50 group-hover:border-indigo-600 transition-all duration-300 overflow-hidden shadow-sm" style={{ backgroundColor: cat.bgColor || '#ffffff' }}>
           <img 
             src={cat.image || "/logo.jpeg"} 
             alt={cat.text}
             className="w-full h-full object-cover"
+
           />
         </div>
         <span className="font-bold text-[11px] uppercase tracking-tight text-gray-700 group-hover:text-indigo-600 transition-colors text-center w-20 line-clamp-1">
@@ -92,9 +93,10 @@ const CategoryDrillDown = ({ onClose }) => {
                 if (onClose) onClose();
               }}
               className="flex flex-col items-center group space-y-3 outline-none flex-shrink-0 snap-center"
+              
             >
               {/* Circle styling to match Level 1 */}
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gray-50 flex items-center justify-center border-2 border-indigo-50 group-hover:border-indigo-600 transition-all duration-300 overflow-hidden shadow-sm">
+              <div className="relative w-32 h-32 sm:w-32 sm:h-32 rounded-full bg-gray-50 flex items-center justify-center border-2 border-indigo-50 group-hover:border-indigo-600 transition-all duration-300 overflow-hidden shadow-sm" style={{ backgroundColor: child.bgColor || '#ffffff' }}>
                 <img
                   src={child.image || "/logo.jpeg"}
                   alt={child.text}
