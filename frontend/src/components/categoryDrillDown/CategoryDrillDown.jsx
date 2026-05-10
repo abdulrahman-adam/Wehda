@@ -37,7 +37,8 @@ const CategoryDrillDown = ({ onClose }) => {
         
         {/* Horizontal Scroll Row */}
        <div className="w-full flex justify-center"> {/* Outer wrapper to ensure true centering */}
-  <div className="flex overflow-x-auto pb-8 px-6 gap-6 scrollbar-hide snap-x items-center justify-center sm:justify-center w-full sm:w-auto">
+  {/* <div className="flex overflow-x-auto pb-8 px-6 gap-6 scrollbar-hide snap-x items-center justify-center sm:justify-center w-full sm:w-auto"> */}
+  <div className="flex overflow-x-auto pb-8 px-6 gap-6 scrollbar-hide snap-x items-center justify-start md:justify-center w-full">
     {parents.map((cat) => (
       <button
         key={cat.id}
