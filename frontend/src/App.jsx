@@ -38,6 +38,7 @@ import Shipping from "./pages/Shipping/Shipping";
 import Promotions from "./pages/promotions/Promotions";
 import NewArrivals from "./pages/newArrivals/NewArrivals";
 import AdminHours from "./pages/admin/AdminHours";
+import CookieBanner from "./components/cookieBanner/CookieBanner";
 
 
 const App = () => {
@@ -166,6 +167,7 @@ const App = () => {
         {/* FALLBACK */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+          <CookieBanner />
 
       {!isSellerPath && <Footer />}
     </div>
