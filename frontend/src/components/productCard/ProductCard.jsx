@@ -67,9 +67,10 @@ const ProductCard = ({ product }) => {
       {/* IMAGE SECTION */}
       <div className="w-full relative flex items-center justify-center h-[140px] sm:h-[180px] overflow-hidden rounded-lg bg-gray-50">
         <img
-          className="w-full group-hover:scale-110 transition-transform duration-500 max-h-full object-contain"
+          className="w-full group-hover:scale-110 transition-transform duration-500 max-h-full object-fill"
           src={product.image[0]}
           alt={product.name}
+          style={{border: '1px solid red'}}
         />
       </div>
 
