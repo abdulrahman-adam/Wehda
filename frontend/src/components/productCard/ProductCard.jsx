@@ -70,7 +70,7 @@ const ProductCard = ({ product }) => {
           className="w-full group-hover:scale-110 transition-transform duration-500 max-h-full object-fill"
           src={product.image[0]}
           alt={product.name}
-          style={{border: '1px solid red'}}
+          
         />
       </div>
 
