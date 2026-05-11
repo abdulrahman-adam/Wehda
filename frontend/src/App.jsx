@@ -46,6 +46,16 @@ const App = () => {
   const isSellerPath = pathname.includes("admin");
   const { showUserLogin, setShowUserLogin, isSeller, user } = useAppContext();
 
+
+// INITIALISATION DU THÈME (Gris/Sombre)
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+
   useEffect(() => {
     setShowUserLogin(false);
   }, [pathname, setShowUserLogin]);
@@ -62,52 +72,30 @@ const App = () => {
 
   
   return (
-    <div className="text-default min-h-screen text-gray-700 bg-white">
+ 
+   <div className="text-default min-h-screen text-gray-700 dark:text-gray-200 bg-white dark:bg-[#0a192f] transition-colors duration-300"> 
       {!isSellerPath && <Navbar />}
       
       {showUserLogin && <Login />}
 
-   {/* Standard Toaster with Z-Index Fix */}
-<div style={{ zIndex: 99999, position: 'relative' }}>
-  <Toaster 
-    position="top-center"
-    reverseOrder={false}
-    gutter={8}
-    containerStyle={{
-      top: 40, // Adds a little extra space from the very top
-    }}
-    toastOptions={{
-      duration: 3000,
-      style: {
-        borderRadius: '12px',
-        padding: '16px',
-        fontSize: '14px',
-        fontWeight: '600',
-        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-      },
-      success: {
-        style: {
-          background: '#10b981',
-          color: '#fff',
-        },
-        iconTheme: {
-          primary: '#fff',
-          secondary: '#10b981',
-        },
-      },
-      error: {
-        style: {
-          background: '#ef4444',
-          color: '#fff',
-        },
-        iconTheme: {
-          primary: '#fff',
-          secondary: '#ef4444',
-        },
-      },
-    }}
-  />
-</div>
+ {/* Toaster avec support Dark Mode */}
+      <div style={{ zIndex: 99999, position: 'relative' }}>
+        <Toaster 
+          position="top-center"
+          toastOptions={{
+            duration: 3000,
+            style: {
+              borderRadius: '12px',
+              padding: '16px',
+              fontSize: '14px',
+              fontWeight: '600',
+              // Change la couleur du toast si le parent est dark
+              background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#fff',
+              color: document.documentElement.classList.contains('dark') ? '#fff' : '#1f2937',
+            },
+          }}
+        />
+      </div>
 
       <Routes>
         {/* ================= PUBLIC ROUTES ================= */}
