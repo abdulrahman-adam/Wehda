@@ -14,20 +14,13 @@ const LatestFeatured = () => {
       {/* HEADER SECTION */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
         <div className="max-w-2xl">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="w-8 h-[2px] bg-indigo-600"></span>
-            <span className="text-indigo-600 text-[10px] font-black uppercase tracking-[0.3em]">
-              Collection 2026
-            </span>
-          </div>
+          
           <h2 className="text-3xl md:text-4xl font-black uppercase tracking-tighter italic text-gray-900 leading-none">
             Nouveautés
           </h2>
           <p className="mt-4 text-gray-500 text-sm md:text-base font-medium leading-relaxed">
-            Découvrez les dernières tendances de la saison. Une fusion parfaite entre 
-            design contemporain et qualité exceptionnelle, conçue pour ceux qui ne 
-            font aucun compromis.
-          </p>
+  Design d'exception. Qualité sans compromis.
+</p>
         </div>
 
         {/* VIEW ALL LINK */}
