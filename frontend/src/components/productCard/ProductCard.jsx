@@ -65,7 +65,7 @@ const ProductCard = ({ product }) => {
       )}
 
       {/* IMAGE SECTION */}
-      <div className="relative flex items-center justify-center h-[140px] sm:h-[180px] w-full overflow-hidden rounded-lg bg-gray-50">
+      <div className="w-full relative flex items-center justify-center h-[140px] sm:h-[180px] w-full overflow-hidden rounded-lg bg-gray-50">
         <img
           className="group-hover:scale-110 transition-transform duration-500 max-h-full object-contain p-2"
           src={product.image[0]}
@@ -84,10 +84,11 @@ const ProductCard = ({ product }) => {
         <h3 className="text-gray-800 font-bold text-xs sm:text-sm leading-tight line-clamp-1">
           {product.name}
         </h3>
-
-        <p className="hidden sm:line-clamp-2 text-gray-400 text-[11px] leading-relaxed mt-1">
-          {product.description}
-        </p>
+<p className="text-gray-400 text-[11px] leading-relaxed mt-1">
+  {product.description.length > 25 
+    ? product.description.substring(0, 25) + "..." 
+    : product.description}
+</p>
 
         {/* COLORS SELECTION */}
         {product.colors?.length > 0 && (
