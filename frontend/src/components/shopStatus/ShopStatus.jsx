@@ -27,8 +27,8 @@ const ShopStatus = () => {
     });
 
     return (
-        <div className="w-full max-w-6xl mx-auto px-4 py-10">
-            <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100 flex flex-col lg:flex-row transition-all duration-500 hover:shadow-blue-500/10">
+        <div className="w-full">
+            <div className="bg-gray-500 flex flex-col lg:flex-row transition-all duration-500 hover:shadow-blue-500/10">
                 
                 {/* LEFT SIDE: Hero Status (Responsive height/width) */}
                 <div className={`lg:w-1/3 p-8 md:p-12 text-center border-b lg:border-b-0 lg:border-r flex flex-col justify-center items-center transition-colors duration-500 ${getStatusTheme()}`}>

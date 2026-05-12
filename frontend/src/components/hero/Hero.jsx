@@ -10,7 +10,7 @@ const Hero = () => {
   const iconBaseClass = "flex items-center justify-center aspect-square rounded-full border shadow-lg transition-all duration-500 active:scale-75 hover:rotate-12 animate-miracle-zoom";
 
   return (
-    <div className="md:hidden flex items-center justify-center w-full p-4">
+    <div className="md:hidden flex items-center justify-center w-full py-4">
       {/* High-Performance GPU Accelerated Animations */}
       <style>{`
         @keyframes miracle-zoom {
