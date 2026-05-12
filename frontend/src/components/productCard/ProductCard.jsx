@@ -3,11 +3,24 @@ import { assets } from "../../assets/assets";
 import { useAppContext } from "../../context/AppContext";
 
 const ProductCard = ({ product }) => {
-  const { currency, cartItems, addToCart, removeFromCart, navigate } =
-    useAppContext();
+  const {
+    currency,
+    cartItems,
+    addToCart,
+    removeFromCart,
+    navigate,
+    categories,
+  } = useAppContext();
 
   const [selectedVariants, setSelectedVariants] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
+
+  // TROUVER LE NOM DE LA CATÉGORIE
+  // On cherche dans la liste globale la catégorie qui correspond à celle du produit
+  const categoryLabel =
+    categories?.find(
+      (cat) => cat._id === product.category || cat.path === product.category,
+    )?.text || "Général";
 
   const toggleVariant = (v) => {
     setSelectedVariants((prev) =>
@@ -70,26 +83,24 @@ const ProductCard = ({ product }) => {
           className="w-full group-hover:scale-110 transition-transform duration-500 max-h-full object-fill"
           src={product.image[0]}
           alt={product.name}
-          
         />
       </div>
 
       {/* INFO SECTION */}
       <div className="flex-1 flex flex-col mt-3 gap-1">
         <div className="flex justify-between items-start">
-          <p className="uppercase text-[8px] sm:text-[9px] font-black tracking-widest text-indigo-500">
-            {product.category}
+          <p className="uppercase text-[8px] sm:text-[9px] font-black tracking-widest text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">
+            {/* On affiche le label trouvé, pas l'ID brut */}
+            catégorie: {categoryLabel}
           </p>
         </div>
 
-        <h3 className="text-gray-800 font-bold text-xs sm:text-sm leading-tight line-clamp-1">
-          {product.name}
-        </h3>
-<p className="text-gray-400 text-[11px] leading-relaxed mt-1">
-  {product.description.length > 25 
-    ? product.description.substring(0, 25) + "..." 
-    : product.description}
-</p>
+        <div className="flex justify-between items-start">
+          <p className="text-[8px] sm:text-[9px] font-black tracking-widest text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">
+            Nom: {product.name}
+          </p>
+        </div>
+       
 
         {/* COLORS SELECTION */}
         {product.colors?.length > 0 && (
@@ -177,36 +188,41 @@ const ProductCard = ({ product }) => {
           {/* THE SECTION AVAILABILITY END*/}
 
           <div className="flex flex-wrap items-center gap-1 sm:gap-2 mb-2">
-
             {/* THE SECTION FOR PRICE START */}
-            
-              <div className="flex items-center gap-1.5 sm:gap-2 mt-2 whitespace-nowrap overflow-hidden">
-  {/* 1. Prix Choc Badge - Kept full text with tighter tracking */}
-  <span className="relative overflow-hidden inline-flex items-center px-1.5 py-0.5 rounded bg-green-500 text-[8px] sm:text-[10px] font-black text-white uppercase tracking-tighter shadow-sm shrink-0">
-    Prix Choc
-    <span className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] animate-sheen"></span>
-  </span>
 
-  {/* 2. Price Container */}
-  <div className="flex items-baseline gap-1">
-    {/* Offer Price - "Patron" size for mobile */}
-    <span className="text-[15px] sm:text-xl font-black text-gray-900 tracking-tighter animate-soft-pulse">
-      {product.offerPrice}
-      <span className="text-[9px] sm:text-xs ml-0.5 font-bold">{currency}</span>
-    </span>
+            <div className="flex items-center gap-1.5 sm:gap-2 mt-2 whitespace-nowrap overflow-hidden">
+              {/* 1. Prix Choc Badge - Kept full text with tighter tracking */}
+              <span className="relative overflow-hidden inline-flex items-center px-1.5 py-0.5 rounded bg-green-500 text-[8px] sm:text-[10px] font-black text-white uppercase tracking-tighter shadow-sm shrink-0">
+                Prix Choc
+                <span className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg] animate-sheen"></span>
+              </span>
 
-    {/* Original Price */}
-    <span className="text-[10px] sm:text-sm font-medium text-gray-400 line-through decoration-red-500/30">
-      {product.price}
-    </span>
-  </div>
+              {/* 2. Price Container */}
+              <div className="flex items-baseline gap-1">
+                {/* Offer Price - "Patron" size for mobile */}
+                <span className="text-[15px] sm:text-xl font-black text-gray-900 tracking-tighter animate-soft-pulse">
+                  {product.offerPrice}
+                  <span className="text-[9px] sm:text-xs ml-0.5 font-bold">
+                    {currency}
+                  </span>
+                </span>
 
-  {/* 3. Discount Tag */}
-  <span className="text-[8px] sm:text-[10px] font-bold text-red-600 bg-red-50 px-1 rounded-sm shrink-0">
-    -{Math.round(((product.price - product.offerPrice) / product.price) * 100)}%
-  </span>
+                {/* Original Price */}
+                <span className="text-[10px] sm:text-sm font-medium text-gray-400 line-through decoration-red-500/30">
+                  {product.price}
+                </span>
+              </div>
 
-  <style>{`
+              {/* 3. Discount Tag */}
+              <span className="text-[8px] sm:text-[10px] font-bold text-red-600 bg-red-50 px-1 rounded-sm shrink-0">
+                -
+                {Math.round(
+                  ((product.price - product.offerPrice) / product.price) * 100,
+                )}
+                %
+              </span>
+
+              <style>{`
     @keyframes sheen {
       0% { left: -100%; }
       20% { left: 100%; }
@@ -223,12 +239,9 @@ const ProductCard = ({ product }) => {
       animation: soft-pulse 2s infinite ease-in-out;
     }
   `}</style>
-</div>
-
-            
+            </div>
 
             {/* THE SECTION FOR PRICE END */}
-           
           </div>
 
           <div onClick={(e) => e.stopPropagation()}>
